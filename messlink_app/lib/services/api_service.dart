@@ -20,6 +20,7 @@ class ApiService {
       creditBalancePaise: 10000, // ₹100
       todayLunchStatus: "ATTENDED",
       todayDinnerStatus: "SCHEDULED",
+      institutionOrOrg: "COEP Technological University, Pune",
       orders: [
         IndividualMealOrder(
           orderId: "ord_101_1",
@@ -50,6 +51,7 @@ class ApiService {
       creditBalancePaise: 5000, // ₹50
       todayLunchStatus: "ATTENDED",
       todayDinnerStatus: "NOT_INCLUDED",
+      institutionOrOrg: "Infosys Campus, Hinjawadi Phase 2",
       orders: [
         IndividualMealOrder(
           orderId: "ord_102_1",
@@ -73,6 +75,7 @@ class ApiService {
       creditBalancePaise: 0,
       todayLunchStatus: "ATTENDED",
       todayDinnerStatus: "SCHEDULED",
+      institutionOrOrg: "Senior Citizens Forum, Kothrud, Pune",
       orders: [
         IndividualMealOrder(
           orderId: "ord_103_1",

@@ -122,6 +122,7 @@ class Subscriber {
   int creditBalancePaise;
   String todayLunchStatus; // 'ATTENDED', 'SCHEDULED', 'SKIPPED'
   String todayDinnerStatus; // 'SCHEDULED', 'SKIPPED', 'ATTENDED'
+  final String institutionOrOrg;
   List<IndividualMealOrder> orders;
 
   Subscriber({
@@ -137,6 +138,7 @@ class Subscriber {
     required this.creditBalancePaise,
     this.todayLunchStatus = 'ATTENDED',
     this.todayDinnerStatus = 'SCHEDULED',
+    this.institutionOrOrg = '',
     required this.orders,
   });
 }

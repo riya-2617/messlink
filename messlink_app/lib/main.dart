@@ -593,6 +593,143 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 16),
+                const Divider(),
+                const SizedBox(height: 10),
+                Text(
+                  '🔑 Direct Diner Sign In by Persona:',
+                  style: TextStyle(
+                    fontSize: isSenior ? 18 : 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                // 1. Student Persona Login
+                Container(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0F172A).withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: const Color(0xFFE65100).withValues(alpha: 0.4)),
+                  ),
+                  child: ListTile(
+                    dense: true,
+                    leading: const CircleAvatar(
+                      backgroundColor: Color(0xFFE65100),
+                      child: Text('🎓', style: TextStyle(fontSize: 16)),
+                    ),
+                    title: Text(
+                      tr('login_as_student'),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: isSenior ? 18 : 14,
+                      ),
+                    ),
+                    subtitle: Text(
+                      'Rohan Patil • COEP Pune • Dark Mode UI',
+                      style: TextStyle(fontSize: isSenior ? 14 : 11, color: Colors.grey),
+                    ),
+                    trailing: const Icon(Icons.arrow_forward, size: 16),
+                    onTap: () {
+                      widget.onRoleChanged(UserRole.diner);
+                      widget.onSubscriberChanged('sub_101');
+                      setState(() => _activeViewIndex = 1);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          backgroundColor: Color(0xFFE65100),
+                          content: Text('Logged in as Rohan Patil (Student Mode & Dark Theme Active)'),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                // 2. Working Adult Persona Login
+                Container(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF2E7D32).withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: const Color(0xFF2E7D32).withValues(alpha: 0.4)),
+                  ),
+                  child: ListTile(
+                    dense: true,
+                    leading: const CircleAvatar(
+                      backgroundColor: Color(0xFF2E7D32),
+                      child: Text('💼', style: TextStyle(fontSize: 16)),
+                    ),
+                    title: Text(
+                      tr('login_as_working'),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: isSenior ? 18 : 14,
+                      ),
+                    ),
+                    subtitle: Text(
+                      'Priya Sharma • Infosys Hinjawadi • Light Corporate UI',
+                      style: TextStyle(fontSize: isSenior ? 14 : 11, color: Colors.grey),
+                    ),
+                    trailing: const Icon(Icons.arrow_forward, size: 16),
+                    onTap: () {
+                      widget.onRoleChanged(UserRole.diner);
+                      widget.onSubscriberChanged('sub_102');
+                      setState(() => _activeViewIndex = 1);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          backgroundColor: Color(0xFF2E7D32),
+                          content: Text('Logged in as Priya Sharma (Working Adult Mode & Light Theme Active)'),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                // 3. Senior Citizen Persona Login
+                Container(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFF9800).withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: const Color(0xFFFF9800).withValues(alpha: 0.5)),
+                  ),
+                  child: ListTile(
+                    dense: true,
+                    leading: const CircleAvatar(
+                      backgroundColor: Color(0xFFFF9800),
+                      child: Text('👓', style: TextStyle(fontSize: 16)),
+                    ),
+                    title: Text(
+                      tr('login_as_senior'),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: isSenior ? 18 : 14,
+                      ),
+                    ),
+                    subtitle: Text(
+                      'Nana Saheb Joshi • High-Contrast WCAG AAA • Soft Diet',
+                      style: TextStyle(fontSize: isSenior ? 14 : 11, color: Colors.grey),
+                    ),
+                    trailing: const Icon(Icons.arrow_forward, size: 16),
+                    onTap: () {
+                      widget.onRoleChanged(UserRole.diner);
+                      widget.onSubscriberChanged('sub_103');
+                      setState(() => _activeViewIndex = 1);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          backgroundColor: Color(0xFFFF9800),
+                          content: Text('Logged in as Nana Saheb Joshi (Senior Citizen Mode & High Contrast Active)'),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                // Open Full Login Modal button
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton.icon(
+                    icon: const Icon(Icons.login, size: 16),
+                    label: const Text('Other Diner Sign In (OTP / Roll No) →'),
+                    onPressed: () => _showDinerLoginDialog(),
+                  ),
+                ),
               ],
             ),
           ),
@@ -713,22 +850,27 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  tr('admin_dashboard'),
-                  style: TextStyle(
-                    fontSize: isSenior ? 24 : 20,
-                    fontWeight: FontWeight.bold,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    tr('admin_dashboard'),
+                    style: TextStyle(
+                      fontSize: isSenior ? 24 : 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                Text(
-                  tr('admin_subtitle'),
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-              ],
+                  Text(
+                    tr('admin_subtitle'),
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ),
+            const SizedBox(width: 8),
             OutlinedButton(
               onPressed: () => setState(() => _activeViewIndex = 0),
               child: Text(tr('back_home')),
@@ -934,22 +1076,27 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  tr('owner_dashboard'),
-                  style: TextStyle(
-                    fontSize: isSenior ? 24 : 20,
-                    fontWeight: FontWeight.bold,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    tr('owner_dashboard'),
+                    style: TextStyle(
+                      fontSize: isSenior ? 24 : 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                const Text(
-                  'Annapurna Bhojanalaya | FSSAI: 11522036000123 (Verified)',
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-              ],
+                  const Text(
+                    'Annapurna Bhojanalaya | FSSAI: 11522036000123 (Verified)',
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ),
+            const SizedBox(width: 8),
             OutlinedButton(
               onPressed: () => setState(() => _activeViewIndex = 0),
               child: Text(tr('back_home')),
@@ -1481,10 +1628,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final isNarrow = constraints.maxWidth < 500;
+            final greetingWidget = Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
@@ -1493,17 +1640,32 @@ class _HomeScreenState extends State<HomeScreen> {
                     fontSize: isSenior ? 24 : 20,
                     fontWeight: FontWeight.bold,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
                 Text(
                   '${sub.planName} • Annapurna Bhojanalaya',
                   style: TextStyle(
-                    fontSize: isSenior ? 18 : 13,
+                    fontSize: isSenior ? 16 : 13,
                     color: Colors.grey,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
+                if (sub.institutionOrOrg.isNotEmpty)
+                  Text(
+                    '🏢 ${sub.institutionOrOrg}',
+                    style: TextStyle(
+                      fontSize: isSenior ? 14 : 11,
+                      color: Colors.blueGrey,
+                      fontStyle: FontStyle.italic,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
               ],
-            ),
-            Row(
+            );
+
+            final buttonsWidget = Wrap(
+              spacing: 8,
+              runSpacing: 8,
               children: [
                 OutlinedButton.icon(
                   style: OutlinedButton.styleFrom(
@@ -1513,14 +1675,37 @@ class _HomeScreenState extends State<HomeScreen> {
                   label: const Text('Login / Switch'),
                   onPressed: () => _showDinerLoginDialog(),
                 ),
-                const SizedBox(width: 8),
-                OutlinedButton(
+                OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  ),
+                  icon: const Icon(Icons.arrow_back, size: 16),
+                  label: Text(tr('back_home')),
                   onPressed: () => setState(() => _activeViewIndex = 0),
-                  child: Text(tr('back_home')),
                 ),
               ],
-            ),
-          ],
+            );
+
+            if (isNarrow) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  greetingWidget,
+                  const SizedBox(height: 10),
+                  buttonsWidget,
+                ],
+              );
+            }
+
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(child: greetingWidget),
+                const SizedBox(width: 8),
+                buttonsWidget,
+              ],
+            );
+          },
         ),
         const SizedBox(height: 16),
 
@@ -1533,8 +1718,11 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 8,
+              runSpacing: 8,
               children: [
                 const Text(
                   'Need Help? Call Mess Manager:',
@@ -1888,113 +2076,417 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Dialog: Diner Login / Account Switcher
+  // Dialog: Diner Login / Dedicated Persona Sign-In Flow
   void _showDinerLoginDialog() {
     final phoneCtrl = TextEditingController();
 
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(tr('diner_login_title')),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                tr('diner_login_desc'),
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
+        title: Row(
+          children: [
+            const Icon(Icons.account_circle, color: Color(0xFFE65100)),
+            const SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                tr('diner_login_title'),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 16),
-              const Text('Quick Select Demo Diner Account:',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-              const SizedBox(height: 8),
-
-              // Account 1: Rohan Patil (Student)
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: const CircleAvatar(
-                  backgroundColor: Color(0xFFE65100),
-                  child: Text('R', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  tr('diner_login_desc'),
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
-                title: const Text('Rohan Patil (Student Mode)',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                subtitle: const Text('+91 98765 43210 • 42 Meals Left',
-                    style: TextStyle(fontSize: 11)),
-                trailing: widget.activeSubscriberId == 'sub_101'
-                    ? const Icon(Icons.check_circle, color: Colors.green)
-                    : null,
-                onTap: () {
-                  widget.onSubscriberChanged('sub_101');
-                  Navigator.of(ctx).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Logged in as Rohan Patil (Student)')),
-                  );
-                },
-              ),
+                const SizedBox(height: 14),
 
-              // Account 2: Priya Sharma (Working Adult)
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: const CircleAvatar(
-                  backgroundColor: Color(0xFF2E7D32),
-                  child: Text('P', style: TextStyle(color: Colors.white)),
+                const Text(
+                  'Select Diner Login Persona:',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                 ),
-                title: const Text('Priya Sharma (Working Adult)',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                subtitle: const Text('+91 98111 22233 • 24 Meals Left',
-                    style: TextStyle(fontSize: 11)),
-                trailing: widget.activeSubscriberId == 'sub_102'
-                    ? const Icon(Icons.check_circle, color: Colors.green)
-                    : null,
-                onTap: () {
-                  widget.onSubscriberChanged('sub_102');
-                  Navigator.of(ctx).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Logged in as Priya Sharma (Working Adult)')),
-                  );
-                },
-              ),
+                const SizedBox(height: 10),
 
-              // Account 3: Nana Saheb Joshi (Senior)
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: const CircleAvatar(
-                  backgroundColor: Color(0xFFFF9800),
-                  child: Text('N', style: TextStyle(color: Colors.white)),
+                // ==========================================
+                // 1. STUDENT LOGIN CARD (Rohan Patil)
+                // ==========================================
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  margin: const EdgeInsets.only(bottom: 12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0F172A).withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: widget.activeSubscriberId == 'sub_101'
+                          ? const Color(0xFFE65100)
+                          : const Color(0xFFE65100).withValues(alpha: 0.3),
+                      width: widget.activeSubscriberId == 'sub_101' ? 2 : 1,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: const [
+                              CircleAvatar(
+                                radius: 14,
+                                backgroundColor: Color(0xFFE65100),
+                                child: Text('🎓', style: TextStyle(fontSize: 13)),
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                'Student Persona',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Color(0xFFE65100),
+                                ),
+                              ),
+                            ],
+                          ),
+                          if (widget.activeSubscriberId == 'sub_101')
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: Colors.green,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: const Text('ACTIVE',
+                                  style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      const Text(
+                        'Rohan Patil • +91 98765 43210',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                      ),
+                      const Text(
+                        '🏫 COEP Technological University, Pune',
+                        style: TextStyle(fontSize: 11, color: Colors.grey),
+                      ),
+                      const Text(
+                        '📋 Monthly 2-Meals • 42 Meals Left • ₹100 Credit',
+                        style: TextStyle(fontSize: 11, color: Colors.grey),
+                      ),
+                      const SizedBox(height: 6),
+                      Wrap(
+                        spacing: 4,
+                        children: const [
+                          Chip(
+                            label: Text('Dark UI', style: TextStyle(fontSize: 9)),
+                            padding: EdgeInsets.zero,
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          Chip(
+                            label: Text('1-Click Skip', style: TextStyle(fontSize: 9)),
+                            padding: EdgeInsets.zero,
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          Chip(
+                            label: Text('Exam Pause', style: TextStyle(fontSize: 9)),
+                            padding: EdgeInsets.zero,
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFE65100),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                          ),
+                          icon: const Icon(Icons.login, size: 16),
+                          label: const Text('Sign In as Student (Rohan)'),
+                          onPressed: () {
+                            widget.onSubscriberChanged('sub_101');
+                            widget.onRoleChanged(UserRole.diner);
+                            setState(() => _activeViewIndex = 1);
+                            Navigator.of(ctx).pop();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                backgroundColor: Color(0xFFE65100),
+                                content: Text(
+                                  'Logged in as Rohan Patil! 🎓 Student Mode & Dark Theme Activated.',
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                title: const Text('Nana Saheb Joshi (Senior Citizen)',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                subtitle: const Text('+91 94220 55566 • 54 Meals Left',
-                    style: TextStyle(fontSize: 11)),
-                trailing: widget.activeSubscriberId == 'sub_103'
-                    ? const Icon(Icons.check_circle, color: Colors.green)
-                    : null,
-                onTap: () {
-                  widget.onSubscriberChanged('sub_103');
-                  Navigator.of(ctx).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Logged in as Nana Saheb Joshi (Senior Citizen)')),
-                  );
-                },
-              ),
 
-              const Divider(),
-              const SizedBox(height: 6),
-              const Text('Or Enter Mobile Number:',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-              const SizedBox(height: 6),
-              TextField(
-                controller: phoneCtrl,
-                keyboardType: TextInputType.phone,
-                decoration: const InputDecoration(
-                  prefixText: '+91 ',
-                  labelText: 'Mobile Number',
-                  border: OutlineInputBorder(),
-                  isDense: true,
+                // ==========================================
+                // 2. WORKING ADULT LOGIN CARD (Priya Sharma)
+                // ==========================================
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  margin: const EdgeInsets.only(bottom: 12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF2E7D32).withValues(alpha: 0.10),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: widget.activeSubscriberId == 'sub_102'
+                          ? const Color(0xFF2E7D32)
+                          : const Color(0xFF2E7D32).withValues(alpha: 0.3),
+                      width: widget.activeSubscriberId == 'sub_102' ? 2 : 1,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: const [
+                              CircleAvatar(
+                                radius: 14,
+                                backgroundColor: Color(0xFF2E7D32),
+                                child: Text('💼', style: TextStyle(fontSize: 13)),
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                'Working Adult Persona',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Color(0xFF2E7D32),
+                                ),
+                              ),
+                            ],
+                          ),
+                          if (widget.activeSubscriberId == 'sub_102')
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: Colors.green,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: const Text('ACTIVE',
+                                  style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      const Text(
+                        'Priya Sharma • +91 98111 22233',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                      ),
+                      const Text(
+                        '🏢 Infosys Campus, Hinjawadi Phase 2',
+                        style: TextStyle(fontSize: 11, color: Colors.grey),
+                      ),
+                      const Text(
+                        '📋 Executive Lunch Box • 24 Meals Left • ₹50 Credit',
+                        style: TextStyle(fontSize: 11, color: Colors.grey),
+                      ),
+                      const SizedBox(height: 6),
+                      Wrap(
+                        spacing: 4,
+                        children: const [
+                          Chip(
+                            label: Text('Corporate Light UI', style: TextStyle(fontSize: 9)),
+                            padding: EdgeInsets.zero,
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          Chip(
+                            label: Text('Desk Delivery', style: TextStyle(fontSize: 9)),
+                            padding: EdgeInsets.zero,
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          Chip(
+                            label: Text('GST Invoices', style: TextStyle(fontSize: 9)),
+                            padding: EdgeInsets.zero,
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF2E7D32),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                          ),
+                          icon: const Icon(Icons.login, size: 16),
+                          label: const Text('Sign In as Working Adult (Priya)'),
+                          onPressed: () {
+                            widget.onSubscriberChanged('sub_102');
+                            widget.onRoleChanged(UserRole.diner);
+                            setState(() => _activeViewIndex = 1);
+                            Navigator.of(ctx).pop();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                backgroundColor: Color(0xFF2E7D32),
+                                content: Text(
+                                  'Logged in as Priya Sharma! 💼 Working Adult Mode & Light Theme Activated.',
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+
+                // ==========================================
+                // 3. SENIOR CITIZEN LOGIN CARD (Nana Saheb)
+                // ==========================================
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  margin: const EdgeInsets.only(bottom: 12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFF9800).withValues(alpha: 0.10),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: widget.activeSubscriberId == 'sub_103'
+                          ? const Color(0xFFFF9800)
+                          : const Color(0xFFFF9800).withValues(alpha: 0.4),
+                      width: widget.activeSubscriberId == 'sub_103' ? 2 : 1,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: const [
+                              CircleAvatar(
+                                radius: 14,
+                                backgroundColor: Color(0xFFFF9800),
+                                child: Text('👓', style: TextStyle(fontSize: 13)),
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                'Senior Citizen Persona',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Color(0xFFFF9800),
+                                ),
+                              ),
+                            ],
+                          ),
+                          if (widget.activeSubscriberId == 'sub_103')
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: Colors.green,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: const Text('ACTIVE',
+                                  style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      const Text(
+                        'Nana Saheb Joshi • +91 94220 55566',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                      ),
+                      const Text(
+                        '🏡 Senior Citizens Forum, Kothrud, Pune',
+                        style: TextStyle(fontSize: 11, color: Colors.grey),
+                      ),
+                      const Text(
+                        '📋 Senior Nutritional Care • 54 Meals Left',
+                        style: TextStyle(fontSize: 11, color: Colors.grey),
+                      ),
+                      const SizedBox(height: 6),
+                      Wrap(
+                        spacing: 4,
+                        children: const [
+                          Chip(
+                            label: Text('High Contrast AAA', style: TextStyle(fontSize: 9)),
+                            padding: EdgeInsets.zero,
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          Chip(
+                            label: Text('Mild Spice Diet', style: TextStyle(fontSize: 9)),
+                            padding: EdgeInsets.zero,
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          Chip(
+                            label: Text('1-Tap Help Call', style: TextStyle(fontSize: 9)),
+                            padding: EdgeInsets.zero,
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFFF9800),
+                            foregroundColor: Colors.black,
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                          ),
+                          icon: const Icon(Icons.login, size: 16),
+                          label: const Text(
+                            'Sign In as Senior Citizen (Nana Saheb)',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          onPressed: () {
+                            widget.onSubscriberChanged('sub_103');
+                            widget.onRoleChanged(UserRole.diner);
+                            setState(() => _activeViewIndex = 1);
+                            Navigator.of(ctx).pop();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                backgroundColor: Color(0xFFFF9800),
+                                content: Text(
+                                  'Logged in as Nana Saheb Joshi! 👓 Senior Citizen Mode & WCAG AAA Contrast Activated.',
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const Divider(),
+                const SizedBox(height: 6),
+                const Text(
+                  'Or Sign In with Any Mobile Number (OTP):',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: phoneCtrl,
+                  keyboardType: TextInputType.phone,
+                  decoration: const InputDecoration(
+                    prefixText: '+91 ',
+                    labelText: '10-Digit Mobile Number',
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         actions: [
@@ -2005,11 +2497,13 @@ class _HomeScreenState extends State<HomeScreen> {
           ElevatedButton(
             onPressed: () {
               if (phoneCtrl.text.isNotEmpty) {
+                widget.onRoleChanged(UserRole.diner);
+                setState(() => _activeViewIndex = 1);
                 Navigator.of(ctx).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                      content: Text(
-                          'OTP Verified! Signed in with +91 ${phoneCtrl.text}')),
+                    content: Text('OTP Verified! Signed in as Diner with +91 ${phoneCtrl.text}'),
+                  ),
                 );
               }
             },
