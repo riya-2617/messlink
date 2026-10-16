@@ -12,6 +12,7 @@
 | **Design System & Typography** | **COMPLETE** | CSS Custom Properties | Saffron/Green palette, responsive scale, Noto Sans Devanagari. |
 | **Trilingual Localization Engine** | **COMPLETE** | Dictionaries for `en`, `mr`, `hi` | Full key coverage with localized fallback logic. |
 | **Persona Presentation Toggles** | **COMPLETE** | Interactive UI state | Student (Dark/Rapid Skip), Working (Calendar), Senior (High-Contrast/Large). |
+| **Flutter Cross-Platform App** | **COMPLETE (VERIFIED)** | `flutter analyze` & `flutter test` passing | Native mobile/desktop/web app built with Flutter 3.41.6 in `messlink_app/`. |
 | **Relational Data Schema** | **COMPLETE** | SQL DDL & Entity relations | 10 core tables designed with strict constraints and audit logs. |
 | **Meal Skip & Cutoff Logic** | **COMPLETE (Spec & Service)** | Idempotent transaction tests | Server-side time enforcement (09:00 AM / 05:00 PM IST) with double-credit protection. |
 | **Double-Entry Ledger Architecture**| **COMPLETE (Spec & Service)** | Balance invariant validation | Immutable debit/credit transactions with idempotency key. |

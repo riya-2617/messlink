@@ -136,6 +136,50 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isOcrScanned = false;
   String? _statusMessage;
 
+  // Editable OCR scanned items
+  final List<Map<String, dynamic>> _ocrDishes = [
+    {
+      'category': 'Sabzi',
+      'en': 'Chole Masala',
+      'mr': 'मसाला छोले',
+      'hi': 'छोले मसाला',
+      'confidence': 0.98,
+      'isUncertain': false,
+    },
+    {
+      'category': 'Sabzi',
+      'en': 'Aloo Gobhi',
+      'mr': 'बटाटा फ्लॉवर भाजी',
+      'hi': 'आलू गोभी',
+      'confidence': 0.95,
+      'isUncertain': false,
+    },
+    {
+      'category': 'Bread',
+      'en': 'Puri (5 pcs)',
+      'mr': 'गरम पुरी (५ नग)',
+      'hi': 'गरम पूरी (५)',
+      'confidence': 0.92,
+      'isUncertain': false,
+    },
+    {
+      'category': 'Rice',
+      'en': 'Peas Pulao',
+      'mr': 'मटार पुलाव',
+      'hi': 'मटर पुलाव',
+      'confidence': 0.91,
+      'isUncertain': false,
+    },
+    {
+      'category': 'Sweet',
+      'en': 'Sheera (Halwa)',
+      'mr': 'रव्याचा शिरा',
+      'hi': 'सूजी हलवा',
+      'confidence': 0.74,
+      'isUncertain': true,
+    },
+  ];
+
   String tr(String key) => AppStrings.get(key, widget.currentLang);
 
   @override
@@ -144,51 +188,62 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: const Color(0xFFE65100),
-                borderRadius: BorderRadius.circular(8),
+        title: InkWell(
+          onTap: () => setState(() => _activeViewIndex = 0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE65100),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: const Text('M',
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
               ),
-              child: const Text('M',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold)),
-            ),
-            const SizedBox(width: 10),
-            Text(tr('app_title'),
-                style: const TextStyle(fontWeight: FontWeight.bold)),
-          ],
+              const SizedBox(width: 6),
+              Flexible(
+                child: Text(
+                  tr('app_title'),
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              ),
+            ],
+          ),
         ),
         actions: [
           // Persona Switcher
           DropdownButton<PersonaMode>(
             value: widget.currentPersona,
             underline: const SizedBox(),
-            items: [
+            isDense: true,
+            items: const [
               DropdownMenuItem(
                 value: PersonaMode.student,
-                child: Text(tr('student_mode')),
+                child: Text('🎓 Student'),
               ),
               DropdownMenuItem(
                 value: PersonaMode.working,
-                child: Text(tr('working_mode')),
+                child: Text('💼 Working'),
               ),
               DropdownMenuItem(
                 value: PersonaMode.senior,
-                child: Text(tr('senior_mode')),
+                child: Text('👓 Senior'),
               ),
             ],
             onChanged: (mode) {
               if (mode != null) widget.onPersonaChanged(mode);
             },
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 6),
           // Language Switcher
           DropdownButton<String>(
             value: widget.currentLang,
             underline: const SizedBox(),
+            isDense: true,
             items: const [
               DropdownMenuItem(value: 'en', child: Text('EN')),
               DropdownMenuItem(value: 'mr', child: Text('मराठी')),
@@ -198,13 +253,26 @@ class _HomeScreenState extends State<HomeScreen> {
               if (lang != null) widget.onLanguageChanged(lang);
             },
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 8),
         ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(isSenior ? 20.0 : 16.0),
-          child: _buildCurrentView(isSenior),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Main Active View
+              _buildCurrentView(isSenior),
+
+              const SizedBox(height: 36),
+              const Divider(),
+              const SizedBox(height: 12),
+
+              // Full Footer & Compliance
+              _buildFooter(isSenior),
+            ],
+          ),
         ),
       ),
     );
@@ -221,7 +289,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // --- View 0: Landing Hero & Dual Path Gate ---
+  // ==========================================
+  // VIEW 0: HERO & DUAL PATH GATE
+  // ==========================================
   Widget _buildLandingView(bool isSenior) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -266,7 +336,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 24),
 
-        // Card 1: Eat at a Mess
+        // Dual Gate Cards (Path A & Path B)
         Card(
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -316,7 +386,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 16),
 
-        // Card 2: Manage a Mess
         Card(
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -364,24 +433,50 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-
         const SizedBox(height: 20),
-        // FSSAI & Legal Notice
-        Center(
-          child: TextButton.icon(
-            icon: const Icon(Icons.verified, color: Color(0xFF2E7D32)),
-            label: Text(
-              'FSSAI Lic. 11522036000123 • DPDPA 2023 Compliant',
-              style: TextStyle(fontSize: isSenior ? 18 : 13),
+
+        // Featured Active Mess Discovery Banner (Exact Parity with Website)
+        Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+            side: const BorderSide(color: Color(0xFFE65100), width: 1),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  tr('featured_mess_title'),
+                  style: TextStyle(
+                    fontSize: isSenior ? 20 : 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  tr('featured_mess_subtitle'),
+                  style: TextStyle(
+                    fontSize: isSenior ? 16 : 13,
+                    color: isSenior ? Colors.white70 : Colors.grey,
+                  ),
+                ),
+                const SizedBox(height: 14),
+                OutlinedButton(
+                  onPressed: () => setState(() => _activeViewIndex = 1),
+                  child: Text(tr('view_menu_cta')),
+                ),
+              ],
             ),
-            onPressed: () => _showComplianceDialog(),
           ),
         ),
       ],
     );
   }
 
-  // --- View 1: Customer / Diner Hub ---
+  // ==========================================
+  // VIEW 1: DINER / CUSTOMER HUB
+  // ==========================================
   Widget _buildDinerView(bool isSenior) {
     final sub = ApiService.fallbackSubscriber;
 
@@ -410,7 +505,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            TextButton(
+            OutlinedButton(
               onPressed: () => setState(() => _activeViewIndex = 0),
               child: Text(tr('back_home')),
             ),
@@ -418,7 +513,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 16),
 
-        // Key Metrics Row
+        // 3 Key Metrics Cards (Remaining, Wallet Credits, Monthly Skips Used)
         Row(
           children: [
             Expanded(
@@ -428,14 +523,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     children: [
                       Text(tr('remaining_meals'),
+                          textAlign: TextAlign.center,
                           style: TextStyle(
-                              fontSize: isSenior ? 16 : 12,
+                              fontSize: isSenior ? 14 : 11,
                               color: Colors.grey)),
                       const SizedBox(height: 4),
                       Text(
                         '${sub.mealsRemaining} / ${sub.totalMeals}',
                         style: TextStyle(
-                          fontSize: isSenior ? 24 : 20,
+                          fontSize: isSenior ? 22 : 18,
                           fontWeight: FontWeight.bold,
                           color: const Color(0xFFE65100),
                         ),
@@ -445,7 +541,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 6),
             Expanded(
               child: Card(
                 child: Padding(
@@ -453,16 +549,43 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     children: [
                       Text(tr('wallet_credits'),
+                          textAlign: TextAlign.center,
                           style: TextStyle(
-                              fontSize: isSenior ? 16 : 12,
+                              fontSize: isSenior ? 14 : 11,
                               color: Colors.grey)),
                       const SizedBox(height: 4),
                       Text(
                         '₹${sub.creditBalancePaise ~/ 100}',
                         style: TextStyle(
-                          fontSize: isSenior ? 24 : 20,
+                          fontSize: isSenior ? 22 : 18,
                           fontWeight: FontWeight.bold,
                           color: const Color(0xFF2E7D32),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    children: [
+                      Text(tr('skips_used'),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: isSenior ? 14 : 11,
+                              color: Colors.grey)),
+                      const SizedBox(height: 4),
+                      Text(
+                        '${sub.skipsUsed} / ${sub.maxSkips}',
+                        style: TextStyle(
+                          fontSize: isSenior ? 22 : 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blueGrey,
                         ),
                       ),
                     ],
@@ -474,26 +597,35 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 16),
 
-        // Status Notification
+        // Skip Success Notification Banner
         if (_statusMessage != null)
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(14),
             margin: const EdgeInsets.only(bottom: 16),
             decoration: BoxDecoration(
               color: const Color(0xFFE8F5E9),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(10),
               border: Border.all(color: const Color(0xFF2E7D32)),
             ),
-            child: Text(
-              _statusMessage!,
-              style: const TextStyle(
-                color: Color(0xFF2E7D32),
-                fontWeight: FontWeight.bold,
-              ),
+            child: Row(
+              children: [
+                const Icon(Icons.check_circle, color: Color(0xFF2E7D32)),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    _statusMessage!,
+                    style: const TextStyle(
+                      color: Color(0xFF2E7D32),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
 
-        // Cutoff Alert & 1-Click Skip Button
+        // Cutoff Warning Alert & 1-Click Action
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -507,7 +639,7 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '⏰ ${tr('cutoff_alert')}',
+                '⏰ ${tr('cutoff_dinner_alert')}',
                 style: const TextStyle(
                   color: Color(0xFFBF360C),
                   fontWeight: FontWeight.bold,
@@ -532,7 +664,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         )
                       : const Icon(Icons.cancel_schedule_send),
                   label: Text(
-                    tr('skip_dinner'),
+                    tr('skip_action'),
                     style: TextStyle(
                         fontSize: isSenior ? 20 : 16,
                         fontWeight: FontWeight.bold),
@@ -545,10 +677,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 20),
 
-        // Today's Menu
+        // Today's Verified Menu Card
         Card(
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(18),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -562,10 +694,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const Chip(
-                      label: Text('✓ Pure Veg',
-                          style: TextStyle(fontSize: 12, color: Colors.green)),
-                      backgroundColor: Color(0xFFE8F5E9),
+                    Chip(
+                      label: Text(tr('fresh_veg_badge'),
+                          style: const TextStyle(fontSize: 11, color: Colors.green)),
+                      backgroundColor: const Color(0xFFE8F5E9),
                     ),
                   ],
                 ),
@@ -609,7 +741,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // --- View 2: Mess Owner Portal ---
+  // ==========================================
+  // VIEW 2: MESS OWNER OPERATIONS PORTAL
+  // ==========================================
   Widget _buildOwnerView(bool isSenior) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -633,7 +767,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            TextButton(
+            OutlinedButton(
               onPressed: () => setState(() => _activeViewIndex = 0),
               child: Text(tr('back_home')),
             ),
@@ -641,55 +775,87 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 16),
 
-        // Headcount Forecast Grid
+        // 3 Operational Headcount Metrics Cards
         Row(
           children: [
             Expanded(
               child: Card(
                 child: Padding(
-                  padding: const EdgeInsets.all(14),
+                  padding: const EdgeInsets.all(12),
                   child: Column(
                     children: [
-                      const Text('Lunch Headcount',
-                          style: TextStyle(fontSize: 12, color: Colors.grey)),
+                      Text(tr('lunch_headcount'),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: isSenior ? 13 : 11, color: Colors.grey)),
                       const SizedBox(height: 4),
                       const Text(
                         '84 Meals',
                         style: TextStyle(
-                          fontSize: 22,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF2E7D32),
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      const Text('11 Skips registered',
-                          style: TextStyle(fontSize: 11, color: Colors.grey)),
+                      const SizedBox(height: 2),
+                      Text(tr('lunch_cutoff_passed'),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 10, color: Colors.grey)),
                     ],
                   ),
                 ),
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 6),
             Expanded(
               child: Card(
                 child: Padding(
-                  padding: const EdgeInsets.all(14),
+                  padding: const EdgeInsets.all(12),
                   child: Column(
                     children: [
-                      const Text('Dinner Headcount',
-                          style: TextStyle(fontSize: 12, color: Colors.grey)),
+                      Text(tr('dinner_headcount'),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: isSenior ? 13 : 11, color: Colors.grey)),
                       const SizedBox(height: 4),
                       const Text(
                         '87 Meals',
                         style: TextStyle(
-                          fontSize: 22,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFFE65100),
                         ),
                       ),
+                      const SizedBox(height: 2),
+                      Text(tr('dinner_cutoff_active'),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    children: [
+                      Text(tr('kitchen_savings'),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: isSenior ? 13 : 11, color: Colors.grey)),
                       const SizedBox(height: 4),
-                      const Text('Cutoff closes 5:00 PM',
-                          style: TextStyle(fontSize: 11, color: Colors.grey)),
+                      const Text(
+                        '~₹1,240',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.teal,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(tr('kitchen_savings_desc'),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 10, color: Colors.grey)),
                     ],
                   ),
                 ),
@@ -754,23 +920,78 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
 
-                // OCR Extracted Items Review
+                // OCR Extracted Items Review Drawer
                 if (_isOcrScanned) ...[
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 18),
                   const Divider(),
-                  const Align(
+                  Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Extracted Dishes (Review before publishing):',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                      'Extracted Menu Items for Dinner (Please Review):',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: isSenior ? 18 : 14),
                     ),
                   ),
                   const SizedBox(height: 10),
-                  _buildOcrDishRow('Chole Masala', 'मसाला छोले', 'छोले मसाला', 0.98),
-                  _buildOcrDishRow('Aloo Gobhi', 'बटाटा फ्लॉवर भाजी', 'आलू गोभी', 0.95),
-                  _buildOcrDishRow('Puri (5 pcs)', 'गरम पुरी (५ नग)', 'पूरी (५)', 0.92),
-                  _buildOcrDishRow('Sheera (Halwa)', 'रव्याचा शिरा', 'सूजी हलवा', 0.74, isUncertain: true),
+                  ..._ocrDishes.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final dish = entry.value;
+                    String name = dish[widget.currentLang] ?? dish['en'];
+                    bool isUncertain = dish['isUncertain'] ?? false;
+                    double confidence = dish['confidence'] ?? 1.0;
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Text(name,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: isSenior ? 18 : 14)),
+                              const SizedBox(width: 8),
+                              if (isUncertain)
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: Colors.amber.shade100,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Text(tr('review_spelling'),
+                                      style: const TextStyle(
+                                          fontSize: 10, color: Colors.orange)),
+                                )
+                              else
+                                Text(tr('confident_badge'),
+                                    style: const TextStyle(
+                                        fontSize: 10, color: Colors.green)),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text('${(confidence * 100).toInt()}%',
+                                  style: const TextStyle(
+                                      fontSize: 11, color: Colors.grey)),
+                              const SizedBox(width: 8),
+                              TextButton(
+                                onPressed: () => _editDishDialog(index),
+                                style: TextButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 2),
+                                  minimumSize: Size.zero,
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                ),
+                                child: Text(tr('edit_dish')),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
                   const SizedBox(height: 14),
                   SizedBox(
                     width: double.infinity,
@@ -783,7 +1004,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       onPressed: () {
                         setState(() {
                           _isOcrScanned = false;
-                          _statusMessage = '✅ Menu verified & published to all subscribers!';
+                          _statusMessage =
+                              '✅ Menu verified & published to all subscribers!';
                         });
                       },
                       child: Text(
@@ -799,7 +1021,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 20),
 
-        // Financial Ledger Card
+        // Financial Ledger Card (Double-Entry)
         Card(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -825,13 +1047,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Text(record.type.replaceAll('_', ' '),
                                 style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 14)),
+                                    fontWeight: FontWeight.bold, fontSize: 13)),
                             Text(record.note,
                                 style: const TextStyle(
-                                    fontSize: 12, color: Colors.grey)),
+                                    fontSize: 11, color: Colors.grey)),
                             Text(record.timestamp,
                                 style: const TextStyle(
-                                    fontSize: 11, color: Colors.grey)),
+                                    fontSize: 10, color: Colors.grey)),
                           ],
                         ),
                         Text(
@@ -839,7 +1061,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF2E7D32),
-                            fontSize: 16,
+                            fontSize: 15,
                           ),
                         ),
                       ],
@@ -854,40 +1076,44 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildOcrDishRow(
-      String en, String mr, String hi, double confidence,
-      {bool isUncertain = false}) {
-    String dishName = en;
-    if (widget.currentLang == 'mr') dishName = mr;
-    if (widget.currentLang == 'hi') dishName = hi;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Text(dishName,
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(width: 8),
-              if (isUncertain)
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: Colors.amber.shade100,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: const Text('⚠️ Check spelling',
-                      style: TextStyle(fontSize: 11, color: Colors.orange)),
-                ),
-            ],
+  // ==========================================
+  // FOOTER & LEGAL MODAL
+  // ==========================================
+  Widget _buildFooter(bool isSenior) {
+    return Column(
+      children: [
+        Wrap(
+          alignment: WrapAlignment.center,
+          spacing: 16,
+          children: [
+            TextButton(
+              onPressed: () => _showComplianceDialog(),
+              child: Text(tr('privacy_policy')),
+            ),
+            TextButton(
+              onPressed: () => _showComplianceDialog(),
+              child: Text(tr('fssai_compliance')),
+            ),
+            TextButton(
+              onPressed: () => _showComplianceDialog(),
+              child: Text(tr('terms_refund')),
+            ),
+            TextButton(
+              onPressed: () => _showComplianceDialog(),
+              child: Text(tr('grievance_officer')),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Text(
+          tr('footer_text'),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: isSenior ? 16 : 11,
+            color: Colors.grey,
           ),
-          Text('${(confidence * 100).toInt()}%',
-              style: const TextStyle(fontSize: 12, color: Colors.grey)),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -902,7 +1128,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _simulateOcrScan() {
     setState(() => _isOcrScanning = true);
-    Future.delayed(const Duration(milliseconds: 1400), () {
+    Future.delayed(const Duration(milliseconds: 1200), () {
       if (mounted) {
         setState(() {
           _isOcrScanning = false;
@@ -912,22 +1138,58 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void _editDishDialog(int index) {
+    final dish = _ocrDishes[index];
+    final currentVal = dish[widget.currentLang] ?? dish['en'];
+    final controller = TextEditingController(text: currentVal);
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('${tr('edit_dish')}: $currentVal'),
+        content: TextField(
+          controller: controller,
+          decoration: const InputDecoration(labelText: 'Dish Name'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                dish[widget.currentLang] = controller.text;
+                dish['isUncertain'] = false;
+                dish['confidence'] = 1.0;
+              });
+              Navigator.of(ctx).pop();
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showComplianceDialog() {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('DPDPA 2023 & FSSAI Compliance'),
+        title: Text(tr('policy_dpdpa_title')),
         content: const Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('• FSSAI: License 11522036000123 verified.'),
-            SizedBox(height: 6),
+            SizedBox(height: 8),
             Text('• DPDPA 2023: Strict data privacy with zero raw card/UPI PIN storage.'),
-            SizedBox(height: 6),
+            SizedBox(height: 8),
             Text('• Parental Consent: Required for minors (< 18 yrs).'),
-            SizedBox(height: 6),
+            SizedBox(height: 8),
             Text('• Double-Entry Ledger: Prevents duplicate meal credits.'),
+            SizedBox(height: 8),
+            Text('• Grievance Officer: Registered Indian Resident Officer.'),
           ],
         ),
         actions: [
