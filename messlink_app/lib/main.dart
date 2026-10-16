@@ -20,7 +20,10 @@ class _MessLinkAppState extends State<MessLinkApp> {
   // Active Authenticated Role
   UserRole _currentRole = UserRole.diner;
 
-  // For Diner Role: Dynamic Persona (Single login adapting UI)
+  // Active Logged-In Subscriber ID (for Diner Portal)
+  String _activeSubscriberId = "sub_101";
+
+  // For Diner Role: Dynamic Persona (Adapts UI according to logged-in diner)
   DinerPersona _dinerPersona = DinerPersona.student;
 
   void _updateLanguage(String lang) {
@@ -38,6 +41,14 @@ class _MessLinkAppState extends State<MessLinkApp> {
   void _updateDinerPersona(DinerPersona persona) {
     setState(() {
       _dinerPersona = persona;
+    });
+  }
+
+  void _updateActiveSubscriber(String subId) {
+    final sub = ApiService.getSubscriber(subId);
+    setState(() {
+      _activeSubscriberId = subId;
+      _dinerPersona = sub.dinerPersona;
     });
   }
 
@@ -155,10 +166,12 @@ class _MessLinkAppState extends State<MessLinkApp> {
       home: HomeScreen(
         currentLang: _currentLang,
         currentRole: _currentRole,
+        activeSubscriberId: _activeSubscriberId,
         dinerPersona: _dinerPersona,
         onLanguageChanged: _updateLanguage,
         onRoleChanged: _updateRole,
         onPersonaChanged: _updateDinerPersona,
+        onSubscriberChanged: _updateActiveSubscriber,
       ),
     );
   }
@@ -167,19 +180,23 @@ class _MessLinkAppState extends State<MessLinkApp> {
 class HomeScreen extends StatefulWidget {
   final String currentLang;
   final UserRole currentRole;
+  final String activeSubscriberId;
   final DinerPersona dinerPersona;
   final ValueChanged<String> onLanguageChanged;
   final ValueChanged<UserRole> onRoleChanged;
   final ValueChanged<DinerPersona> onPersonaChanged;
+  final ValueChanged<String> onSubscriberChanged;
 
   const HomeScreen({
     super.key,
     required this.currentLang,
     required this.currentRole,
+    required this.activeSubscriberId,
     required this.dinerPersona,
     required this.onLanguageChanged,
     required this.onRoleChanged,
     required this.onPersonaChanged,
+    required this.onSubscriberChanged,
   });
 
   @override
@@ -212,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
       id: "mess_kota_02",
       name: "Radhe Krishna Mess (राधे कृष्णा मेस)",
       fssai: "12221015000456",
-      fssaiVerified: false, // Pending verification
+      fssaiVerified: false,
       city: "Kota",
       locality: "Rajiv Gandhi Nagar",
       dietary: "PURE_VEG",
@@ -307,7 +324,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         actions: [
-          // 1. Role Selector (Admin, Mess Owner, Diner)
+          // 1. Role Selector
           DropdownButton<UserRole>(
             value: widget.currentRole,
             underline: const SizedBox(),
@@ -329,7 +346,6 @@ class _HomeScreenState extends State<HomeScreen> {
             onChanged: (role) {
               if (role != null) {
                 widget.onRoleChanged(role);
-                // Automatically switch to role's primary view
                 setState(() {
                   if (role == UserRole.admin) _activeViewIndex = 3;
                   if (role == UserRole.messOwner) _activeViewIndex = 2;
@@ -340,7 +356,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(width: 6),
 
-          // 2. If Diner Role: Persona Selector (Student, Working, Senior)
+          // 2. If Diner Role: Persona Selector
           if (widget.currentRole == UserRole.diner) ...[
             DropdownButton<DinerPersona>(
               value: widget.dinerPersona,
@@ -390,7 +406,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Active Role Status Badge
+              // Active Role Status Banner
               _buildRoleBanner(),
 
               const SizedBox(height: 12),
@@ -425,15 +441,16 @@ class _HomeScreenState extends State<HomeScreen> {
       bannerColor = const Color(0xFFE65100);
       icon = Icons.restaurant;
     } else {
+      final currentSub = ApiService.getSubscriber(widget.activeSubscriberId);
       String personaTag = 'Student Profile';
       if (widget.dinerPersona == DinerPersona.working) {
         personaTag = 'Working Adult Profile';
       } else if (widget.dinerPersona == DinerPersona.senior) {
-        personaTag = 'Senior Citizen Profile (High-Contrast & Large Fonts)';
+        personaTag = 'Senior Citizen Profile';
       }
-      roleLabel = '${tr('role_diner')} • $personaTag';
+      roleLabel = '${currentSub.userName} (${currentSub.phone}) • $personaTag';
       bannerColor = const Color(0xFF2E7D32);
-      icon = Icons.person_outline;
+      icon = Icons.account_circle;
     }
 
     return Container(
@@ -457,6 +474,17 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
+          if (widget.currentRole == UserRole.diner)
+            TextButton(
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              onPressed: () => _showDinerLoginDialog(),
+              child: const Text('Switch Account',
+                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+            ),
         ],
       ),
     );
@@ -676,7 +704,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // =========================================================================
-  // ROLE 1: PLATFORM ADMIN CONSOLE (Register Mess, Verify FSSAI, Supervise)
+  // ROLE 1: PLATFORM ADMIN CONSOLE
   // =========================================================================
   Widget _buildAdminView(bool isSenior) {
     return Column(
@@ -709,7 +737,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 16),
 
-        // Admin Overview Metric Cards
         Row(
           children: [
             Expanded(
@@ -790,7 +817,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 18),
 
-        // Add New Mess Button
         SizedBox(
           height: 48,
           child: ElevatedButton.icon(
@@ -806,7 +832,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 20),
 
-        // Registered Messes List (Admin controls verify/review)
         Card(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -823,7 +848,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     margin: const EdgeInsets.symmetric(vertical: 8),
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
+                      border: Border.all(
+                          color: Colors.grey.withValues(alpha: 0.3)),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
@@ -873,22 +899,18 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                         ),
-                        Column(
-                          children: [
-                            OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 4),
-                                minimumSize: Size.zero,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  mess.fssaiVerified = !mess.fssaiVerified;
-                                });
-                              },
-                              child: Text(mess.fssaiVerified ? 'Revoke' : 'Verify'),
-                            ),
-                          ],
+                        OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
+                            minimumSize: Size.zero,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              mess.fssaiVerified = !mess.fssaiVerified;
+                            });
+                          },
+                          child: Text(mess.fssaiVerified ? 'Revoke' : 'Verify'),
                         ),
                       ],
                     ),
@@ -903,7 +925,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // =========================================================================
-  // ROLE 2: MESS OWNER PORTAL (Manage Own Mess, AI Menu OCR, Kitchen Headcount)
+  // ROLE 2: MESS OWNER PORTAL (Kitchen Forecast, AI OCR, SUBSCRIBERS & ORDERS)
   // =========================================================================
   Widget _buildOwnerView(bool isSenior) {
     return Column(
@@ -1029,6 +1051,212 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ],
+        ),
+        const SizedBox(height: 20),
+
+        // ===================================================================
+        // NEW FEATURE: SUBSCRIBERS & INDIVIDUAL MEAL ORDERS (Requested by User)
+        // ===================================================================
+        Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: const BorderSide(color: Color(0xFF2E7D32), width: 1.5),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      tr('subscriber_orders_title'),
+                      style: TextStyle(
+                          fontSize: isSenior ? 22 : 18,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE8F5E9),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        '${ApiService.subscribers.length} Active Diners',
+                        style: const TextStyle(
+                            color: Color(0xFF2E7D32),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  tr('subscriber_orders_desc'),
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+                const Divider(),
+
+                // List of individual subscribers with meals and orders
+                ...ApiService.subscribers.map((subscriber) {
+                  final isSkipped = subscriber.todayDinnerStatus == 'SKIPPED';
+                  final isAttended = subscriber.todayDinnerStatus == 'ATTENDED';
+
+                  return Container(
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardTheme.color,
+                      border: Border.all(
+                          color: isSkipped
+                              ? Colors.red.shade400
+                              : Colors.grey.withValues(alpha: 0.3),
+                          width: isSkipped ? 1.5 : 1.0),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 16,
+                                  backgroundColor: const Color(0xFFE65100),
+                                  child: Text(
+                                    subscriber.userName[0],
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      subscriber.userName,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15),
+                                    ),
+                                    Text(
+                                      '${subscriber.phone} • ${subscriber.planName}',
+                                      style: const TextStyle(
+                                          fontSize: 11, color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            OutlinedButton.icon(
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 2),
+                                minimumSize: Size.zero,
+                              ),
+                              icon: const Icon(Icons.receipt_long, size: 14),
+                              label: Text(tr('view_orders'),
+                                  style: const TextStyle(fontSize: 11)),
+                              onPressed: () =>
+                                  _showIndividualOrdersDialog(subscriber),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+
+                        // Today's Individual Meal Status for this Subscriber
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Column(
+                                children: [
+                                  const Text('Lunch Today',
+                                      style: TextStyle(
+                                          fontSize: 11, color: Colors.grey)),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    subscriber.todayLunchStatus == 'ATTENDED'
+                                        ? 'Attended ✓'
+                                        : 'Scheduled ⏳',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                      color: subscriber.todayLunchStatus ==
+                                              'ATTENDED'
+                                          ? Colors.green
+                                          : Colors.orange,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                  height: 24,
+                                  width: 1,
+                                  color: Colors.grey.withValues(alpha: 0.3)),
+                              Column(
+                                children: [
+                                  const Text('Dinner Tonight',
+                                      style: TextStyle(
+                                          fontSize: 11, color: Colors.grey)),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    isSkipped
+                                        ? 'Skipped ❌ (₹50 credited)'
+                                        : isAttended
+                                            ? 'Attended ✓'
+                                            : 'Scheduled ⏳ (Prep needed)',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                      color: isSkipped
+                                          ? Colors.red
+                                          : isAttended
+                                              ? Colors.green
+                                              : const Color(0xFFE65100),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                  height: 24,
+                                  width: 1,
+                                  color: Colors.grey.withValues(alpha: 0.3)),
+                              Column(
+                                children: [
+                                  const Text('Meals Left',
+                                      style: TextStyle(
+                                          fontSize: 11, color: Colors.grey)),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    '${subscriber.mealsRemaining} / ${subscriber.totalMeals}',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+              ],
+            ),
+          ),
         ),
         const SizedBox(height: 20),
 
@@ -1245,10 +1473,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // =========================================================================
-  // ROLE 3: DINER / SUBSCRIBER HUB (Single Login with Persona UI Switching)
+  // ROLE 3: DINER / SUBSCRIBER HUB (With Login / Profile Switcher)
   // =========================================================================
   Widget _buildDinerView(bool isSenior) {
-    final sub = ApiService.fallbackSubscriber;
+    final sub = ApiService.getSubscriber(widget.activeSubscriberId);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1267,7 +1495,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Text(
-                  'Annapurna Bhojanalaya • Pune',
+                  '${sub.planName} • Annapurna Bhojanalaya',
                   style: TextStyle(
                     fontSize: isSenior ? 18 : 13,
                     color: Colors.grey,
@@ -1275,9 +1503,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            OutlinedButton(
-              onPressed: () => setState(() => _activeViewIndex = 0),
-              child: Text(tr('back_home')),
+            Row(
+              children: [
+                OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  ),
+                  icon: const Icon(Icons.switch_account, size: 16),
+                  label: const Text('Login / Switch'),
+                  onPressed: () => _showDinerLoginDialog(),
+                ),
+                const SizedBox(width: 8),
+                OutlinedButton(
+                  onPressed: () => setState(() => _activeViewIndex = 0),
+                  child: Text(tr('back_home')),
+                ),
+              ],
             ),
           ],
         ),
@@ -1311,7 +1552,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   label: const Text('Call Now'),
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Dialing Mess Manager: +91 98220 12345')),
+                      const SnackBar(
+                          content: Text('Dialing Mess Manager: +91 98220 12345')),
                     );
                   },
                 ),
@@ -1320,7 +1562,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
 
-        // 3 Key Metrics Cards (Remaining, Wallet Credits, Monthly Skips Used)
+        // 3 Key Metrics Cards
         Row(
           children: [
             Expanded(
@@ -1468,12 +1710,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         )
                       : const Icon(Icons.cancel_schedule_send),
                   label: Text(
-                    tr('skip_action'),
+                    sub.todayDinnerStatus == 'SKIPPED'
+                        ? 'Dinner Already Skipped (₹50 Credited)'
+                        : tr('skip_action'),
                     style: TextStyle(
                         fontSize: isSenior ? 20 : 16,
                         fontWeight: FontWeight.bold),
                   ),
-                  onPressed: _isSkipping ? null : _handleSkipMeal,
+                  onPressed: (_isSkipping || sub.todayDinnerStatus == 'SKIPPED')
+                      ? null
+                      : () => _handleSkipMeal(sub.id),
                 ),
               ),
             ],
@@ -1587,9 +1833,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _handleSkipMeal() async {
+  void _handleSkipMeal(String subId) async {
     setState(() => _isSkipping = true);
-    final result = await ApiService.skipMeal('sub_101');
+    final result = await ApiService.skipMeal(subId);
     setState(() {
       _isSkipping = false;
       _statusMessage = result['message'];
@@ -1636,6 +1882,238 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.of(ctx).pop();
             },
             child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Dialog: Diner Login / Account Switcher
+  void _showDinerLoginDialog() {
+    final phoneCtrl = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(tr('diner_login_title')),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                tr('diner_login_desc'),
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+              const SizedBox(height: 16),
+              const Text('Quick Select Demo Diner Account:',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+              const SizedBox(height: 8),
+
+              // Account 1: Rohan Patil (Student)
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const CircleAvatar(
+                  backgroundColor: Color(0xFFE65100),
+                  child: Text('R', style: TextStyle(color: Colors.white)),
+                ),
+                title: const Text('Rohan Patil (Student Mode)',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                subtitle: const Text('+91 98765 43210 • 42 Meals Left',
+                    style: TextStyle(fontSize: 11)),
+                trailing: widget.activeSubscriberId == 'sub_101'
+                    ? const Icon(Icons.check_circle, color: Colors.green)
+                    : null,
+                onTap: () {
+                  widget.onSubscriberChanged('sub_101');
+                  Navigator.of(ctx).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Logged in as Rohan Patil (Student)')),
+                  );
+                },
+              ),
+
+              // Account 2: Priya Sharma (Working Adult)
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const CircleAvatar(
+                  backgroundColor: Color(0xFF2E7D32),
+                  child: Text('P', style: TextStyle(color: Colors.white)),
+                ),
+                title: const Text('Priya Sharma (Working Adult)',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                subtitle: const Text('+91 98111 22233 • 24 Meals Left',
+                    style: TextStyle(fontSize: 11)),
+                trailing: widget.activeSubscriberId == 'sub_102'
+                    ? const Icon(Icons.check_circle, color: Colors.green)
+                    : null,
+                onTap: () {
+                  widget.onSubscriberChanged('sub_102');
+                  Navigator.of(ctx).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Logged in as Priya Sharma (Working Adult)')),
+                  );
+                },
+              ),
+
+              // Account 3: Nana Saheb Joshi (Senior)
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const CircleAvatar(
+                  backgroundColor: Color(0xFFFF9800),
+                  child: Text('N', style: TextStyle(color: Colors.white)),
+                ),
+                title: const Text('Nana Saheb Joshi (Senior Citizen)',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                subtitle: const Text('+91 94220 55566 • 54 Meals Left',
+                    style: TextStyle(fontSize: 11)),
+                trailing: widget.activeSubscriberId == 'sub_103'
+                    ? const Icon(Icons.check_circle, color: Colors.green)
+                    : null,
+                onTap: () {
+                  widget.onSubscriberChanged('sub_103');
+                  Navigator.of(ctx).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Logged in as Nana Saheb Joshi (Senior Citizen)')),
+                  );
+                },
+              ),
+
+              const Divider(),
+              const SizedBox(height: 6),
+              const Text('Or Enter Mobile Number:',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+              const SizedBox(height: 6),
+              TextField(
+                controller: phoneCtrl,
+                keyboardType: TextInputType.phone,
+                decoration: const InputDecoration(
+                  prefixText: '+91 ',
+                  labelText: 'Mobile Number',
+                  border: OutlineInputBorder(),
+                  isDense: true,
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Close'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (phoneCtrl.text.isNotEmpty) {
+                Navigator.of(ctx).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      content: Text(
+                          'OTP Verified! Signed in with +91 ${phoneCtrl.text}')),
+                );
+              }
+            },
+            child: const Text('Sign In via OTP'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Dialog: Individual Orders & Meal History (For Mess Owner)
+  void _showIndividualOrdersDialog(Subscriber subscriber) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('${subscriber.userName} — Meal Orders'),
+            Text(
+              '${subscriber.phone} • Plan: ${subscriber.planName}',
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+          ],
+        ),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.blueGrey.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text('Remaining: ${subscriber.mealsRemaining}/${subscriber.totalMeals}'),
+                    Text('Wallet: ₹${subscriber.creditBalancePaise ~/ 100}'),
+                    Text('Skips: ${subscriber.skipsUsed}/${subscriber.maxSkips}'),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 14),
+              const Text('Recent Individual Orders & Actions:',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+              const SizedBox(height: 8),
+
+              // Orders list
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: subscriber.orders.length,
+                  itemBuilder: (context, idx) {
+                    final order = subscriber.orders[idx];
+                    final isSkipped = order.status == 'SKIPPED';
+                    final isAttended = order.status == 'ATTENDED';
+
+                    return Card(
+                      margin: const EdgeInsets.symmetric(vertical: 4),
+                      child: ListTile(
+                        dense: true,
+                        leading: Icon(
+                          isSkipped
+                              ? Icons.cancel
+                              : isAttended
+                                  ? Icons.check_circle
+                                  : Icons.schedule,
+                          color: isSkipped
+                              ? Colors.red
+                              : isAttended
+                                  ? Colors.green
+                                  : Colors.orange,
+                        ),
+                        title: Text('${order.mealType} — ${order.date}',
+                            style: const TextStyle(fontWeight: FontWeight.bold)),
+                        subtitle: Text(order.notes,
+                            style: const TextStyle(fontSize: 11)),
+                        trailing: Text(
+                          order.status,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: isSkipped
+                                ? Colors.red
+                                : isAttended
+                                    ? Colors.green
+                                    : Colors.orange,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Close'),
           ),
         ],
       ),

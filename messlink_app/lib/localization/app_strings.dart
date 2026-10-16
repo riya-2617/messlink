@@ -1,5 +1,5 @@
 // MessLink Trilingual Localization Strings (English, Marathi, Hindi)
-// Full RBAC & Persona strings support
+// 100% complete RBAC, Diner Login, and Individual Subscriber Orders support
 
 class AppStrings {
   static const Map<String, Map<String, String>> localizedValues = {
@@ -82,6 +82,15 @@ class AppStrings {
       'verify_fssai': 'Verify FSSAI',
       'fssai_verified_status': '✓ Verified',
       'fssai_pending_status': '⏳ Pending Verification',
+      'diner_login_title': 'Diner Sign In & Profile',
+      'diner_login_desc': 'Sign in to access your meal subscription, skip meals, and save wallet credits.',
+      'subscriber_orders_title': 'Subscribers & Individual Meal Orders',
+      'subscriber_orders_desc': 'Live headcount tracking with individual meal orders and attendance logs.',
+      'view_orders': 'View Orders',
+      'mark_attended': 'Mark Attended',
+      'scheduled_status': 'Scheduled ⏳',
+      'attended_status': 'Attended ✓',
+      'skipped_status': 'Skipped ❌',
     },
     'mr': {
       'app_title': 'मेसलिंक',
@@ -161,6 +170,15 @@ class AppStrings {
       'verify_fssai': 'FSSAI तपासा',
       'fssai_verified_status': '✓ तपासले',
       'fssai_pending_status': '⏳ पडताळणी प्रलंबित',
+      'diner_login_title': 'डाइनर लॉगिन व प्रोफाइल',
+      'diner_login_desc': 'जेवण सदस्यता व्यवस्थापित करण्यासाठी आणि क्रेडिट वाचवण्यासाठी लॉगिन करा.',
+      'subscriber_orders_title': 'सदस्य आणि वैयक्तिक जेवण ऑर्डर्स',
+      'subscriber_orders_desc': 'प्रत्येक सदस्याची उपस्थिती, रद्दीकरण आणि ऑर्डर नोंद.',
+      'view_orders': 'ऑर्डर्स पहा',
+      'mark_attended': 'हजेरी लावा',
+      'scheduled_status': 'नियोजित ⏳',
+      'attended_status': 'उपस्थित ✓',
+      'skipped_status': 'रद्द केले ❌',
     },
     'hi': {
       'app_title': 'मेसलिंक',
@@ -240,6 +258,15 @@ class AppStrings {
       'verify_fssai': 'FSSAI सत्यापित करें',
       'fssai_verified_status': '✓ सत्यापित',
       'fssai_pending_status': '⏳ सत्यापन लंबित',
+      'diner_login_title': 'डाइनर साइन-इन व प्रोफ़ाइल',
+      'diner_login_desc': 'भोजन सदस्यता प्रबंधित करने और क्रेडिट बचाने के लिए साइन इन करें।',
+      'subscriber_orders_title': 'सब्सक्राइबर्स एवं व्यक्तिगत भोजन ऑर्डर्स',
+      'subscriber_orders_desc': 'प्रत्येक सदस्य की उपस्थिति, स्किप और ऑर्डर हिस्ट्री देखें।',
+      'view_orders': 'ऑर्डर्स देखें',
+      'mark_attended': 'उपस्थिति दर्ज करें',
+      'scheduled_status': 'नियोजित ⏳',
+      'attended_status': 'उपस्थित ✓',
+      'skipped_status': 'स्किप किया ❌',
     },
   };
 

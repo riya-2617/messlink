@@ -93,25 +93,51 @@ class DishItem {
   }
 }
 
+class IndividualMealOrder {
+  final String orderId;
+  final String date;
+  final String mealType; // 'LUNCH', 'DINNER'
+  String status; // 'SCHEDULED', 'ATTENDED', 'SKIPPED'
+  final String notes;
+
+  IndividualMealOrder({
+    required this.orderId,
+    required this.date,
+    required this.mealType,
+    required this.status,
+    required this.notes,
+  });
+}
+
 class Subscriber {
   final String id;
   final String userName;
   final String phone;
+  final String planName;
+  final DinerPersona dinerPersona;
   int mealsRemaining;
   final int totalMeals;
   int skipsUsed;
   final int maxSkips;
   int creditBalancePaise;
+  String todayLunchStatus; // 'ATTENDED', 'SCHEDULED', 'SKIPPED'
+  String todayDinnerStatus; // 'SCHEDULED', 'SKIPPED', 'ATTENDED'
+  List<IndividualMealOrder> orders;
 
   Subscriber({
     required this.id,
     required this.userName,
     required this.phone,
+    required this.planName,
+    required this.dinerPersona,
     required this.mealsRemaining,
     required this.totalMeals,
     required this.skipsUsed,
     required this.maxSkips,
     required this.creditBalancePaise,
+    this.todayLunchStatus = 'ATTENDED',
+    this.todayDinnerStatus = 'SCHEDULED',
+    required this.orders,
   });
 }
 

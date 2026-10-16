@@ -4,10 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MessLink (मेसलिंक) — Indian Mess Discovery & Meal Subscriptions</title>
-  <meta name="description" content="Discover verified Indian messes, view today's live menu in Marathi, Hindi & English, skip meals before cutoff, and manage subscriptions with zero food waste.">
+  <meta name="description" content="Discover verified Indian messes in Pune & Kota. View live daily menus in Marathi & Hindi, skip meals before cutoff, and get instant ₹50 ledger credits back.">
   <link rel="stylesheet" href="styles.css">
-  <!-- PWA manifest & Apple Touch Icon -->
-  <meta name="theme-color" content="#e65100">
+  <meta name="theme-color" content="#ff6b00">
 </head>
 <body class="mode-student">
 
@@ -18,20 +17,45 @@
 
   <!-- Main Navigation Bar -->
   <header class="navbar">
-    <a class="brand" onclick="navigateTo('LANDING')">
-      <div class="brand-icon">M</div>
-      <div class="brand-text">
-        <h1 data-i18n="app_title">MessLink</h1>
-        <span data-i18n="app_tagline">Indian Mess Discovery & Subscriptions</span>
+    <div class="brand-wrapper" onclick="navigateTo('LANDING')">
+      <div class="brand-logo-icon">
+        <!-- Stylized Indian Brass Thali & Saffron Steam SVG -->
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+          <circle cx="12" cy="12" r="5" fill="#ffffff" opacity="0.3"/>
+          <path d="M12 6c-1.5 0-2.5 1-2.5 2s1 2 2.5 2 2.5-1 2.5-2-1-2-2.5-2z" fill="#ffffff"/>
+        </svg>
       </div>
-    </a>
+      <div class="brand-titles">
+        <h1 class="brand-name" data-i18n="app_title">MessLink</h1>
+        <span class="brand-sub">मेसलिंक • Ghar Jaisa Khana</span>
+      </div>
+    </div>
 
+    <!-- Quick Navigation Links -->
+    <nav class="nav-links">
+      <button id="nav-btn-landing" class="nav-link-btn active" onclick="navigateTo('LANDING')">
+        🏠 <span data-i18n="nav_explore">Explore</span>
+      </button>
+      <button id="nav-btn-diner" class="nav-link-btn" onclick="navigateTo('DINER')">
+        🍛 <span data-i18n="nav_diner">My Pass (Diner)</span>
+      </button>
+      <button id="nav-btn-owner" class="nav-link-btn" onclick="navigateTo('OWNER')">
+        👨‍🍳 <span data-i18n="nav_owner">Owner Cockpit</span>
+      </button>
+    </nav>
+
+    <!-- Right Controls: City, Persona, Language -->
     <div class="nav-controls">
-      <!-- Persona Mode Switcher -->
+      <div class="city-pill">
+        📍 <span>Pune (Karve Nagar)</span>
+      </div>
+
+      <!-- Persona Switcher -->
       <select id="persona-select" class="select-control" aria-label="Presentation Persona">
-        <option value="STUDENT">🎓 Student Mode (Dark)</option>
-        <option value="WORKING">💼 Working Adult (Light)</option>
-        <option value="SENIOR">👓 Senior Citizen (High-Contrast)</option>
+        <option value="STUDENT" selected>🎓 Student Mode</option>
+        <option value="WORKING">💼 Working Pro</option>
+        <option value="SENIOR">👓 Senior Citizen</option>
       </select>
 
       <!-- Language Selector -->
@@ -43,166 +67,518 @@
     </div>
   </header>
 
-  <!-- Main Content Area -->
+  <!-- Main Content Container -->
   <main class="container">
 
-    <!-- ========================================== -->
-    <!-- VIEW 1: HERO & DUAL-PATH DECISION GATE     -->
-    <!-- ========================================== -->
+    <!-- ================================================================== -->
+    <!-- VIEW 1: HERO & DISCOVERY SHOWCASE                                   -->
+    <!-- ================================================================== -->
     <section id="view-landing" class="view-section active">
-      <div class="hero-gate">
-        <div class="hero-badge" data-i18n="landing_badge">🍽️ India's #1 Mess Subscription Network</div>
-        <h2 class="hero-title" data-i18n="landing_heading">Are you here to Eat or Manage a Mess?</h2>
-        <p class="hero-subtitle" data-i18n="landing_subheading">
-          Connecting students and working professionals with nutritious local messes. Skip meals before cutoff, avoid food waste, and save money.
-        </p>
 
-        <!-- The Central Decision Fork -->
-        <div class="dual-gate-cards">
-          <!-- Path A: Eat (Diner Hub) -->
-          <div class="gate-card eat" onclick="navigateTo('DINER')">
-            <div class="gate-icon">🍛</div>
+      <!-- Hero 2-Column Showcase -->
+      <div class="hero-layout">
+        <!-- Hero Left -->
+        <div class="hero-left">
+          <div class="hero-pill-badge">
+            <span class="hero-pill-pulse"></span>
+            <span data-i18n="landing_badge">🍽️ India's #1 Mess Subscription Network</span>
+          </div>
+
+          <h2 class="hero-headline">
+            Real <span class="highlight-saffron">Ghar Jaisa Khana</span>, Zero Waste, Instant Meal Credits.
+          </h2>
+
+          <p class="hero-desc" data-i18n="landing_subheading">
+            Connecting students and working professionals with nutritious, verified local messes. Skip meals before cutoff in 1-tap, avoid food waste, and get instant ₹50 ledger credits back.
+          </p>
+
+          <!-- Interactive Search Bar -->
+          <div class="search-bar-wrapper">
+            <span>🔍</span>
+            <input type="text" id="mess-search-input" class="search-input" placeholder="Search messes near COEP, Ferguson, Karve Nagar, Allen Kota..." oninput="handleSearchMess(this.value)">
+            <button class="btn btn-primary" onclick="navigateTo('DINER')">Find Mess</button>
+          </div>
+
+          <!-- Quick Filter Chips -->
+          <div class="filter-chips-row">
+            <span class="filter-chip active">🟢 Pure Veg Only</span>
+            <span class="filter-chip">🥞 Unlimited Chapati</span>
+            <span class="filter-chip">⭐ 4.5+ Rating</span>
+            <span class="filter-chip">⚡ Under ₹60/Meal</span>
+          </div>
+
+          <!-- Hero Metrics Social Proof -->
+          <div class="hero-proof-grid">
+            <div class="proof-item">
+              <h4>48+</h4>
+              <p>Verified Messes</p>
+            </div>
+            <div class="proof-item">
+              <h4>14,200+</h4>
+              <p>Meals Saved</p>
+            </div>
+            <div class="proof-item">
+              <h4>₹6.8L+</h4>
+              <p>Student Credits Saved</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Right: Live Thali Showcase Card -->
+        <div class="hero-right">
+          <div class="thali-showcase-card">
+            <div class="thali-img-container">
+              <img src="images/hero_thali.jpg" alt="Authentic Indian Deluxe Thali" class="thali-hero-img" loading="eager">
+              <div class="thali-overlay-badge">
+                <span style="color: #ffaa00;">⭐ 4.8</span> (342 reviews) • Annapurna Bhojanalaya
+              </div>
+              <div class="thali-cutoff-tag">
+                ⏰ Dinner Cutoff: 05:00 PM IST
+              </div>
+            </div>
+            <div class="thali-details-pane">
+              <div class="thali-mess-info">
+                <h3>Today's Special Dinner Thali</h3>
+                <p>Baingan Bharta, Moong Dal Fry, Hot Phulkas & Kolam Rice</p>
+              </div>
+              <button class="btn btn-primary" onclick="navigateTo('DINER')">
+                View Live Menu →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- The Core Dual-Choice Decision Gate -->
+      <div class="decision-gate-section">
+        <h3 class="gate-section-title" data-i18n="landing_heading">Are you here to Eat or Manage a Mess?</h3>
+        <p class="gate-section-sub">Choose your dedicated workspace tailored for either hungry subscribers or busy mess kitchen owners.</p>
+
+        <div class="dual-cards-grid">
+          <!-- Option A: Diner Hub -->
+          <div class="journey-card diner-path" onclick="navigateTo('DINER')">
+            <div class="journey-icon-box">🍛</div>
             <h3 data-i18n="eat_title">Eat at a Mess</h3>
             <p data-i18n="eat_desc">
-              Discover verified messes in Pune & Kota. View today's menu, skip meals in 1-click, and track your meal credits.
+              Discover verified messes in Pune & Kota. View today's menu, skip meals in 1-click before cutoff, and track your wallet credits.
             </p>
+            <ul class="journey-features-list">
+              <li>✨ <strong>1-Click Meal Skip</strong> — Get ₹50 back instantly</li>
+              <li>🛡️ <strong>100% FSSAI Verified</strong> — Strict hygiene checks</li>
+              <li>📱 <strong>Digital Pass</strong> — Contactless QR entry check-in</li>
+            </ul>
             <button class="btn btn-primary" data-i18n="eat_cta">Explore Diners' Hub →</button>
           </div>
 
-          <!-- Path B: Manage a Mess (Owner Portal) -->
-          <div class="gate-card manage" onclick="navigateTo('OWNER')">
-            <div class="gate-icon">👨‍🍳</div>
+          <!-- Option B: Mess Owner Operations -->
+          <div class="journey-card owner-path" onclick="navigateTo('OWNER')">
+            <div class="journey-icon-box">👨‍🍳</div>
             <h3 data-i18n="manage_title">Manage a Mess</h3>
             <p data-i18n="manage_desc">
-              Predict today's exact headcount, reduce kitchen food wastage by 30%, scan daily menus with AI, and automate dues.
+              Predict today's exact headcount, reduce kitchen food wastage by 30%, scan daily chalkboard menus with AI, and automate dues.
             </p>
+            <ul class="journey-features-list">
+              <li>📉 <strong>Stop Food Wastage</strong> — Know exact attendance at 5 PM</li>
+              <li>📸 <strong>AI Blackboard OCR</strong> — Scan chalkboard in Marathi/Hindi</li>
+              <li>⚖️ <strong>Double-Entry Ledger</strong> — Transparent payment accounting</li>
+            </ul>
             <button class="btn btn-secondary" data-i18n="manage_cta">Open Owner Portal →</button>
           </div>
         </div>
+      </div>
 
-        <!-- Verified Messes Live Discovery Banner -->
-        <div style="background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; text-align: left; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+      <!-- Verified Mess Discovery Grid -->
+      <div class="discovery-section">
+        <div class="section-title-row">
           <div>
-            <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 4px;">📍 Featured Active Mess: Annapurna Bhojanalaya (अन्नपूर्णा भोजनालय)</div>
-            <div style="font-size: 0.85rem; color: var(--text-muted);">Karve Nagar, Pune • Pure Veg • ⭐ 4.8 (342 reviews) • <span style="color: var(--color-veg-green); font-weight: 600;">✓ FSSAI Lic: 11522036000123</span></div>
+            <h2>Popular Verified Messes Near You</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">Hygienic, student-friendly dining halls with active live menus</p>
           </div>
-          <button class="btn btn-outline" onclick="navigateTo('DINER')">View Today's Menu</button>
+          <span class="badge badge-veg">100% Pure Veg Filter Active</span>
+        </div>
+
+        <div class="messes-cards-grid" id="messes-cards-container">
+          <!-- Card 1: Annapurna Bhojanalaya -->
+          <div class="mess-card">
+            <div class="mess-card-banner">
+              <span class="badge badge-veg">FSSAI Lic: 11522036000123</span>
+              <span style="font-size: 0.82rem; font-weight: 700; color: #ffaa00;">⭐ 4.8 (342)</span>
+            </div>
+            <div class="mess-card-body">
+              <h4 class="mess-name-header">Annapurna Bhojanalaya (अन्नपूर्णा)</h4>
+              <div class="mess-location-meta">
+                📍 Karve Nagar, Pune • 400m from Cummins / COEP Hostel
+              </div>
+              <div class="mess-pricing-box">
+                <div>
+                  <div class="mess-price-num">₹3,200<span style="font-size: 0.8rem; font-weight: 500;">/month</span></div>
+                  <div class="mess-price-sub">₹53/thali • 2 meals/day</div>
+                </div>
+                <span class="badge badge-saffron">₹50 Skip Credit</span>
+              </div>
+              <div class="mess-menu-preview">
+                <strong>Today's Dinner:</strong> Baingan Bharta, Moong Dal Fry, Hot Phulkas, Kolam Rice
+              </div>
+              <button class="btn btn-outline" style="width: 100%;" onclick="navigateTo('DINER')">
+                View Pass & Menu →
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 2: Radhe Krishna Mess -->
+          <div class="mess-card">
+            <div class="mess-card-banner">
+              <span class="badge badge-veg">FSSAI Lic: 12221015000456</span>
+              <span style="font-size: 0.82rem; font-weight: 700; color: #ffaa00;">⭐ 4.7 (512)</span>
+            </div>
+            <div class="mess-card-body">
+              <h4 class="mess-name-header">Radhe Krishna Mess (राधे कृष्णा)</h4>
+              <div class="mess-location-meta">
+                📍 Rajiv Gandhi Nagar, Kota • 250m from Allen Supath
+              </div>
+              <div class="mess-pricing-box">
+                <div>
+                  <div class="mess-price-num">₹3,500<span style="font-size: 0.8rem; font-weight: 500;">/month</span></div>
+                  <div class="mess-price-sub">₹58/thali • Unlimited Phulkas</div>
+                </div>
+                <span class="badge badge-saffron">₹55 Skip Credit</span>
+              </div>
+              <div class="mess-menu-preview">
+                <strong>Today's Dinner:</strong> Paneer Kadhai, Dal Makhani, Tawa Roti, Jeera Pulao
+              </div>
+              <button class="btn btn-outline" style="width: 100%;" onclick="navigateTo('DINER')">
+                View Pass & Menu →
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 3: Gurukrupa Dining Hall -->
+          <div class="mess-card">
+            <div class="mess-card-banner">
+              <span class="badge badge-veg">FSSAI Lic: 11523048000789</span>
+              <span style="font-size: 0.82rem; font-weight: 700; color: #ffaa00;">⭐ 4.9 (618)</span>
+            </div>
+            <div class="mess-card-body">
+              <h4 class="mess-name-header">Gurukrupa Dining Hall (गुरुकृपा)</h4>
+              <div class="mess-location-meta">
+                📍 FC Road, Pune • Near Fergusson College Gate
+              </div>
+              <div class="mess-pricing-box">
+                <div>
+                  <div class="mess-price-num">₹3,600<span style="font-size: 0.8rem; font-weight: 500;">/month</span></div>
+                  <div class="mess-price-sub">₹60/thali • Pure Desi Ghee</div>
+                </div>
+                <span class="badge badge-saffron">₹50 Skip Credit</span>
+              </div>
+              <div class="mess-menu-preview">
+                <strong>Today's Dinner:</strong> Methi Matar Malai, Gujarati Dal, Rotli, Basmati Rice
+              </div>
+              <button class="btn btn-outline" style="width: 100%;" onclick="navigateTo('DINER')">
+                View Pass & Menu →
+              </button>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- How It Works Zero-Waste Infographic -->
+      <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 32px 24px; margin: 40px 0;">
+        <h3 style="font-family: var(--font-display); font-size: 1.45rem; font-weight: 800; text-align: center; margin-bottom: 24px;">
+          How MessLink Saves You Money & Stops Food Waste
+        </h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
+          <div style="text-align: center;">
+            <div style="font-size: 2rem; margin-bottom: 8px;">📱</div>
+            <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 4px;">1. Check Daily Menu</h4>
+            <p style="font-size: 0.82rem; color: var(--text-secondary);">See verified dinner items published at 4 PM by your mess owner.</p>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 2rem; margin-bottom: 8px;">⚡</div>
+            <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 4px;">2. 1-Tap Meal Skip</h4>
+            <p style="font-size: 0.82rem; color: var(--text-secondary);">Eating out with friends or staying late? Tap skip before 5 PM cutoff.</p>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 2rem; margin-bottom: 8px;">👨‍🍳</div>
+            <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 4px;">3. Kitchen Syncs</h4>
+            <p style="font-size: 0.82rem; color: var(--text-secondary);">Kitchen head count updates instantly. Cooks exact portions without waste.</p>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 2rem; margin-bottom: 8px;">💰</div>
+            <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 4px;">4. Instant ₹50 Credit</h4>
+            <p style="font-size: 0.82rem; color: var(--text-secondary);">₹50 credited to your wallet, auto-deducted on your next monthly renewal!</p>
+          </div>
+        </div>
+      </div>
+
     </section>
 
-    <!-- ========================================== -->
-    <!-- VIEW 2: DINER / CUSTOMER HUB              -->
-    <!-- ========================================== -->
+    <!-- ================================================================== -->
+    <!-- VIEW 2: DINER / CUSTOMER PORTAL                                     -->
+    <!-- ================================================================== -->
     <section id="view-diner" class="view-section">
-      <div class="section-header">
-        <div>
+      <div class="diner-header-bar">
+        <div class="diner-greeting">
           <h2>Namaste, <span id="diner-user-name">Rohan Patil</span> 🙏</h2>
-          <p style="color: var(--text-muted); font-size: 0.9rem;">Annapurna Bhojanalaya • Monthly 2-Meal Subscription</p>
+          <p>Annapurna Bhojanalaya • Monthly 2-Meal Plan (Lunch + Dinner)</p>
         </div>
-        <button class="btn btn-outline" onclick="navigateTo('LANDING')">← Back to Home</button>
+        <button class="btn btn-outline" onclick="navigateTo('LANDING')">← Back to Explore</button>
+      </div>
+
+      <!-- Digital Student Mess Pass Card -->
+      <div class="digital-pass-card">
+        <div class="pass-card-top">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span class="pass-chip">MESSLINK VERIFIED PASS</span>
+            <span class="badge badge-veg">Active Subscription</span>
+          </div>
+          <span style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-secondary);">PASS ID: ML-2026-PUNE-101</span>
+        </div>
+        <div class="pass-body-grid">
+          <div class="pass-user-meta">
+            <h3>Rohan Patil</h3>
+            <p style="font-size: 0.88rem; color: var(--text-secondary);">COEP Technological University, Pune • Karve Nagar Resident</p>
+            <div class="pass-meta-row">
+              <span>Mess: <strong>Annapurna Bhojanalaya</strong></span>
+              <span>Valid Thru: <strong>05 Nov 2026</strong></span>
+              <span>Meal Type: <strong>Lunch & Dinner</strong></span>
+            </div>
+          </div>
+          <!-- Interactive Entry QR Box -->
+          <div class="qr-pass-box" title="Scan at mess entry gate">
+            <svg class="qr-code-svg" viewBox="0 0 100 100">
+              <rect x="0" y="0" width="100" height="100" fill="#ffffff"/>
+              <!-- Stylized QR pattern -->
+              <rect x="10" y="10" width="24" height="24" fill="#0f172a"/>
+              <rect x="14" y="14" width="16" height="16" fill="#ffffff"/>
+              <rect x="18" y="18" width="8" height="8" fill="#ff6b00"/>
+
+              <rect x="66" y="10" width="24" height="24" fill="#0f172a"/>
+              <rect x="70" y="14" width="16" height="16" fill="#ffffff"/>
+              <rect x="74" y="18" width="8" height="8" fill="#ff6b00"/>
+
+              <rect x="10" y="66" width="24" height="24" fill="#0f172a"/>
+              <rect x="14" y="70" width="16" height="16" fill="#ffffff"/>
+              <rect x="18" y="74" width="8" height="8" fill="#ff6b00"/>
+
+              <rect x="42" y="18" width="8" height="8" fill="#0f172a"/>
+              <rect x="42" y="34" width="16" height="8" fill="#0f172a"/>
+              <rect x="34" y="46" width="8" height="16" fill="#0f172a"/>
+              <rect x="54" y="46" width="12" height="12" fill="#ff6b00"/>
+              <rect x="46" y="66" width="20" height="8" fill="#0f172a"/>
+              <rect x="74" y="66" width="16" height="16" fill="#0f172a"/>
+            </svg>
+            <span>TAP TO SCAN</span>
+          </div>
+        </div>
       </div>
 
       <!-- Quick Metrics Grid -->
-      <div class="metrics-grid">
-        <div class="metric-card">
-          <div class="title" data-i18n="meals_remaining">Remaining Meals</div>
-          <div class="value" id="diner-meals-left">42 / 60</div>
+      <div class="diner-metrics-grid">
+        <!-- Metric 1: Remaining Meals -->
+        <div class="metric-widget">
+          <div class="metric-widget-header">
+            <span class="metric-label" data-i18n="meals_remaining">Remaining Meals</span>
+            <div class="metric-icon-small" style="background: var(--primary-soft); color: var(--primary);">🍱</div>
+          </div>
+          <div class="metric-num-display primary-accent" id="diner-meals-left">42 / 60</div>
+          <div class="metric-progress-track">
+            <div class="metric-progress-bar" style="width: 70%;"></div>
+          </div>
+          <small style="font-size: 0.74rem; color: var(--text-secondary); margin-top: 6px; display: block;">Cycle ends in 18 days</small>
         </div>
-        <div class="metric-card success">
-          <div class="title" data-i18n="credits_balance">Wallet Credits Balance</div>
-          <div class="value" id="diner-credits-balance">₹100</div>
+
+        <!-- Metric 2: Wallet Credits -->
+        <div class="metric-widget">
+          <div class="metric-widget-header">
+            <span class="metric-label" data-i18n="credits_balance">Wallet Credits Balance</span>
+            <div class="metric-icon-small" style="background: var(--veg-green-soft); color: var(--veg-green);">₹</div>
+          </div>
+          <div class="metric-num-display green-accent" id="diner-credits-balance">₹100</div>
+          <div class="metric-progress-track">
+            <div class="metric-progress-bar green-bar" style="width: 40%;"></div>
+          </div>
+          <small style="font-size: 0.74rem; color: var(--veg-green); margin-top: 6px; display: block;">✓ Auto-deducted on renewal</small>
         </div>
-        <div class="metric-card">
-          <div class="title" data-i18n="skips_left">Monthly Skips Used</div>
-          <div class="value" id="diner-skips-used">2 / 6</div>
+
+        <!-- Metric 3: Skips Used -->
+        <div class="metric-widget">
+          <div class="metric-widget-header">
+            <span class="metric-label" data-i18n="skips_left">Monthly Skips Used</span>
+            <div class="metric-icon-small" style="background: var(--accent-gold-soft); color: var(--accent-gold);">⚡</div>
+          </div>
+          <div class="metric-num-display" id="diner-skips-used">2 / 6</div>
+          <div class="metric-progress-track">
+            <div class="metric-progress-bar" style="width: 33%; background: #f59e0b;"></div>
+          </div>
+          <small style="font-size: 0.74rem; color: var(--text-secondary); margin-top: 6px; display: block;">4 skips remaining this cycle</small>
         </div>
       </div>
 
       <!-- Skip Success Notification Banner -->
-      <div id="skip-success-banner" class="cutoff-alert" style="display: none; background-color: var(--color-veg-light); border-left-color: var(--color-veg-green); color: var(--color-veg-green);">
-      </div>
+      <div id="skip-success-banner" class="skip-success-toast"></div>
 
-      <!-- Cutoff Warning Alert -->
-      <div class="cutoff-alert">
-        <div class="cutoff-text">
-          ⏰ <span data-i18n="cutoff_dinner_alert">Dinner Skip Cutoff: 05:00 PM IST. You can skip until 5:00 PM today.</span>
+      <!-- Cutoff Countdown & Meal Skip Command Module -->
+      <div class="skip-command-widget">
+        <div class="cutoff-timer-pane">
+          <div class="timer-icon-circle">⏰</div>
+          <div class="cutoff-timer-text">
+            <h4>
+              <span data-i18n="cutoff_dinner_alert">Dinner Skip Cutoff: 05:00 PM IST</span>
+              <span id="countdown-ticker" class="cutoff-countdown-badge">02h 45m 12s</span>
+            </h4>
+            <p>Cutoff window active. Skip before 5 PM to get ₹50 credited and prevent kitchen overcooking.</p>
+          </div>
         </div>
-        <button id="skip-meal-btn" class="btn btn-primary" onclick="handleSkipMeal()" data-i18n="skip_action">
-          Skip Tonight's Dinner & Save ₹50
+
+        <button id="skip-meal-btn" class="btn btn-skip" onclick="handleSkipMeal()" data-i18n="skip_action">
+          ⚡ Skip Tonight's Dinner & Save ₹50
         </button>
       </div>
 
-      <!-- Today's Menu Card -->
-      <div class="menu-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 2px solid var(--border-color); padding-bottom: 12px;">
-          <h3 style="font-size: 1.3rem; font-weight: 700;" data-i18n="today_menu">Today's Verified Menu</h3>
-          <span class="badge badge-success">✓ 100% Pure Veg & Fresh</span>
+      <!-- Today's Verified Thali Menu Showcase -->
+      <div class="menu-showcase-panel">
+        <div class="menu-panel-hero">
+          <img src="images/hero_thali.jpg" alt="Today's Verified Thali" class="menu-panel-hero-img">
+          <div class="menu-panel-hero-overlay">
+            <div class="menu-hero-title">
+              <h3 data-i18n="today_menu">Today's Verified Menu</h3>
+              <p>Freshly cooked home-style thali • 100% Pure Veg • FSSAI verified</p>
+            </div>
+          </div>
         </div>
-        <div id="diner-menu-items">
+
+        <!-- Menu Tabs: Lunch vs Dinner -->
+        <div style="padding: 16px 24px 0; display: flex; gap: 10px; border-bottom: 1px solid var(--border-subtle);">
+          <button id="menu-tab-dinner" class="filter-chip active" onclick="switchMenuMeal('dinner')">🌙 Dinner Menu (Tonight)</button>
+          <button id="menu-tab-lunch" class="filter-chip" onclick="switchMenuMeal('lunch')">☀️ Lunch Menu (Earlier Today)</button>
+        </div>
+
+        <div class="menu-items-table" id="diner-menu-items">
           <!-- Dynamically populated by app.js in selected language -->
         </div>
       </div>
+
     </section>
 
-    <!-- ========================================== -->
-    <!-- VIEW 3: DEDICATED MESS OWNER PORTAL        -->
-    <!-- ========================================== -->
+    <!-- ================================================================== -->
+    <!-- VIEW 3: DEDICATED MESS OWNER OPERATIONS PORTAL                      -->
+    <!-- ================================================================== -->
     <section id="view-owner" class="view-section">
-      <div class="section-header">
+      <div class="owner-cockpit-header">
         <div>
           <h2 data-i18n="owner_dashboard">Mess Operations Dashboard</h2>
-          <p style="color: var(--text-muted); font-size: 0.9rem;">Annapurna Bhojanalaya | FSSAI Lic: 11522036000123 (Verified)</p>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">Annapurna Bhojanalaya • FSSAI Lic: 11522036000123 (Verified FSSAI Grade A)</p>
         </div>
-        <button class="btn btn-outline" onclick="navigateTo('LANDING')">← Back to Home</button>
+        <button class="btn btn-outline" onclick="navigateTo('LANDING')">← Back to Explore</button>
       </div>
 
       <!-- Headcount Forecast Cards -->
-      <div class="metrics-grid">
-        <div class="metric-card">
-          <div class="title">Lunch Headcount (Final)</div>
-          <div class="value" id="owner-lunch-expected">84 Meals</div>
-          <small style="color: var(--text-muted); font-size: 0.8rem;">Cutoff Passed (09:00 AM IST) • <span id="owner-lunch-skips">11 Skips</span></small>
+      <div class="diner-metrics-grid">
+        <div class="metric-widget">
+          <div class="metric-widget-header">
+            <span class="metric-label">Lunch Headcount (Final)</span>
+            <span class="badge badge-veg">Closed</span>
+          </div>
+          <div class="metric-num-display" id="owner-lunch-expected">84 Meals</div>
+          <small style="color: var(--text-secondary); font-size: 0.78rem;">Cutoff 09:00 AM • <span id="owner-lunch-skips">11 Skips</span> Registered</small>
         </div>
-        <div class="metric-card success">
-          <div class="title">Dinner Headcount (Forecast)</div>
-          <div class="value" id="owner-dinner-expected">87 Meals</div>
-          <small style="color: var(--text-muted); font-size: 0.8rem;">Cutoff closes at 05:00 PM IST • <span id="owner-dinner-skips">8 Skips</span></small>
+
+        <div class="metric-widget">
+          <div class="metric-widget-header">
+            <span class="metric-label">Dinner Headcount (Forecast)</span>
+            <span class="badge badge-saffron">Live Tally</span>
+          </div>
+          <div class="metric-num-display green-accent" id="owner-dinner-expected">87 Meals</div>
+          <small style="color: var(--text-secondary); font-size: 0.78rem;">Cutoff closes 05:00 PM • <span id="owner-dinner-skips">8 Skips</span> Registered</small>
         </div>
-        <div class="metric-card">
-          <div class="title">Kitchen Food Savings</div>
-          <div class="value">~₹1,240</div>
-          <small style="color: var(--text-muted); font-size: 0.8rem;">Saved today by not overcooking</small>
+
+        <div class="metric-widget">
+          <div class="metric-widget-header">
+            <span class="metric-label">Kitchen Savings Today</span>
+            <span class="badge badge-veg">Zero Waste</span>
+          </div>
+          <div class="metric-num-display primary-accent">~₹1,240</div>
+          <small style="color: var(--text-secondary); font-size: 0.78rem;">Saved today by not overcooking wasted portions</small>
         </div>
       </div>
 
-      <!-- AI Menu Scanner Section -->
-      <div class="ocr-box">
-        <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 6px;" data-i18n="scan_menu_title">AI Menu Photo Scanner (OCR)</h3>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;" data-i18n="scan_menu_desc">
-          Snap a photo of your daily chalkboard or whiteboard menu in Marathi, Hindi, or English.
+      <!-- Kitchen Batch Prep Target Calculator -->
+      <div class="kitchen-recipe-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h3>Tonight's Kitchen Batch Preparation Targets</h3>
+            <p style="color: var(--text-secondary); font-size: 0.85rem;">Automatically scaled for 87 confirmed diners (13 skips deducted)</p>
+          </div>
+          <span class="badge badge-saffron">⚡ Kitchen AI Recipe Scaling</span>
+        </div>
+
+        <div class="batch-ingredients-grid">
+          <div class="ingredient-box">
+            <div class="ingredient-qty">348 pcs</div>
+            <div class="ingredient-label">Hot Phulkas (4 / thali)</div>
+          </div>
+          <div class="ingredient-box">
+            <div class="ingredient-qty">17.4 L</div>
+            <div class="ingredient-label">Moong Dal Fry (Liters)</div>
+          </div>
+          <div class="ingredient-box">
+            <div class="ingredient-qty">13.0 kg</div>
+            <div class="ingredient-label">Baingan Bharta & Thecha</div>
+          </div>
+          <div class="ingredient-box">
+            <div class="ingredient-qty">8.7 kg</div>
+            <div class="ingredient-label">Raw Kolam Rice to Steam</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Blackboard Menu Scanner (Live OCR Demo) -->
+      <div class="ai-ocr-module">
+        <h3 style="font-family: var(--font-display); font-size: 1.35rem; font-weight: 800; margin-bottom: 6px;" data-i18n="scan_menu_title">
+          AI Menu Photo Scanner (Devanagari OCR)
+        </h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 18px;" data-i18n="scan_menu_desc">
+          Snap a photo of your daily chalkboard or whiteboard menu in Marathi, Hindi, or English. MessLink AI digitizes it for all subscribers.
         </p>
+
+        <!-- Blackboard Photo Preview with Laser Scan Effect -->
+        <div class="ocr-blackboard-preview-container">
+          <img src="images/blackboard_menu.jpg" alt="Chalkboard menu in mess kitchen" class="ocr-blackboard-img">
+          <div id="ocr-scan-laser" class="ocr-scan-laser"></div>
+        </div>
+
         <button id="ocr-scan-btn" class="btn btn-primary" onclick="simulateOCRScan()" data-i18n="simulate_scan_btn">
           📸 Scan Blackboard Menu Photo
         </button>
 
-        <!-- Scanned Items Review Box (Hidden until scanned) -->
-        <div id="ocr-result-preview" style="display: none; margin-top: 24px; text-align: left; background-color: var(--bg-secondary); border-radius: var(--radius-md); padding: 20px; border: 1px solid var(--border-color);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-            <h4 style="font-size: 1.1rem; font-weight: 700;">Extracted Menu Items for Dinner (Please Review)</h4>
-            <span style="font-size: 0.8rem; color: var(--text-muted);">Trilingual Extraction Ready</span>
+        <!-- Extracted OCR Preview Box -->
+        <div id="ocr-result-preview" class="ocr-results-wrapper">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+            <h4 style="font-size: 1.1rem; font-weight: 800;">Extracted Menu Items for Dinner (Review & Edit)</h4>
+            <span class="badge badge-veg">Trilingual OCR Ready</span>
           </div>
-          <div id="ocr-items-list" style="margin-bottom: 16px;"></div>
+
+          <div id="ocr-items-list" style="margin-bottom: 18px;"></div>
+
           <button id="ocr-publish-btn" class="btn btn-secondary" onclick="publishScannedMenu()" data-i18n="review_publish_btn">
-            Confirm & Publish to Subscribers
+            ✓ Confirm & Broadcast to 87 Subscribers
           </button>
         </div>
       </div>
 
-      <!-- Financial Ledger Table -->
-      <div class="menu-card">
-        <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 14px;" data-i18n="ledger_title">Transaction Ledger (Double-Entry)</h3>
-        <div style="overflow-x: auto;">
+      <!-- Double-Entry Transaction Ledger Table -->
+      <div class="ledger-panel">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
+          <div>
+            <h3 style="font-family: var(--font-display); font-size: 1.25rem; font-weight: 800;" data-i18n="ledger_title">Transaction Ledger (Double-Entry)</h3>
+            <p style="font-size: 0.82rem; color: var(--text-secondary);">Real-time financial audits with zero debit/credit discrepancy</p>
+          </div>
+          <button class="btn btn-outline" style="font-size: 0.82rem; padding: 6px 14px;" onclick="alert('Exporting verified double-entry CSV report...')">
+            📥 Export CSV
+          </button>
+        </div>
+
+        <div class="ledger-table-wrap">
           <table class="ledger-table">
             <thead>
               <tr>
@@ -222,30 +598,38 @@
 
   </main>
 
-  <!-- Legal & Compliance Modal (DPDPA 2023) -->
+  <!-- Legal & Compliance Modal (DPDPA 2023 & FSSAI) -->
   <div id="dpdpa-modal" class="modal-backdrop">
-    <div class="modal-content">
-      <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 12px;" data-i18n="policy_dpdpa_title">DPDPA 2023 & Indian Compliance</h3>
-      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 14px;">
-        MessLink operates strictly in accordance with the <strong>Digital Personal Data Protection Act, 2023</strong> and the <strong>Food Safety and Standards Act, 2006</strong>.
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <h3 style="font-family: var(--font-display); font-size: 1.3rem; font-weight: 800;" data-i18n="policy_dpdpa_title">
+          DPDPA 2023 & Indian Statutory Compliance
+        </h3>
+        <button onclick="closeModal('dpdpa-modal')" style="background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer;">✕</button>
+      </div>
+
+      <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 14px;">
+        MessLink operates strictly in accordance with the <strong>Digital Personal Data Protection Act, 2023</strong>, <strong>Food Safety and Standards Act, 2006</strong>, and <strong>IT Act, 2000</strong>.
       </p>
-      <ul style="font-size: 0.85rem; padding-left: 20px; margin-bottom: 18px; line-height: 1.8;">
-        <li><strong>Data Fiduciary</strong>: MessLink Technologies India Pvt. Ltd.</li>
-        <li><strong>FSSAI Enforcement</strong>: All listed messes must hold an active 14-digit FSSAI license.</li>
-        <li><strong>Zero Raw Card Storage</strong>: We do not store card credentials or UPI PINs.</li>
-        <li><strong>Data Principal Rights</strong>: You may export or request complete erasure of your profile at any time.</li>
+
+      <ul style="font-size: 0.84rem; padding-left: 20px; margin-bottom: 18px; line-height: 1.8; color: var(--text-secondary);">
+        <li><strong style="color: var(--text-main);">Data Fiduciary</strong>: MessLink Technologies India Pvt. Ltd. (CIN: U72900PN2026PTC109823).</li>
+        <li><strong style="color: var(--text-main);">FSSAI Mandatory Licensing</strong>: Every mess listed must display an active 14-digit FSSAI license audited semi-annually.</li>
+        <li><strong style="color: var(--text-main);">Zero Raw Payment Storage</strong>: UPI PINs and raw card credentials never hit MessLink servers.</li>
+        <li><strong style="color: var(--text-main);">Data Principal Rights</strong>: Users have full legal rights to data access, correction, and account deletion under Section 11 of DPDPA 2023.</li>
       </ul>
-      <button class="btn btn-outline" style="width: 100%;" onclick="closeModal('dpdpa-modal')">Close Notice</button>
+
+      <button class="btn btn-primary" style="width: 100%;" onclick="closeModal('dpdpa-modal')">I Understand & Agree</button>
     </div>
   </div>
 
   <!-- Accessible Footer -->
-  <footer class="footer">
-    <div class="footer-links">
-      <a href="javascript:void(0)" onclick="openModal('dpdpa-modal')">DPDPA 2023 Privacy</a>
-      <a href="javascript:void(0)" onclick="openModal('dpdpa-modal')">FSSAI Compliance</a>
+  <footer class="app-footer">
+    <div class="footer-nav-row">
+      <a href="javascript:void(0)" onclick="openModal('dpdpa-modal')">DPDPA 2023 Privacy Policy</a>
+      <a href="javascript:void(0)" onclick="openModal('dpdpa-modal')">FSSAI Hygiene Standards</a>
       <a href="javascript:void(0)" onclick="openModal('dpdpa-modal')">Terms & Refund Policy</a>
-      <a href="javascript:void(0)" onclick="openModal('dpdpa-modal')">Grievance Officer</a>
+      <a href="javascript:void(0)" onclick="openModal('dpdpa-modal')">Grievance Redressal Officer</a>
     </div>
     <p data-i18n="footer_text">
       MessLink Technologies India Pvt. Ltd. | Compliant with DPDPA 2023, FSSAI Act 2006, and IT Act 2000.
