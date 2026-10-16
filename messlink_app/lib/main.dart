@@ -332,15 +332,36 @@ class _HomeScreenState extends State<HomeScreen> {
             items: const [
               DropdownMenuItem(
                 value: UserRole.diner,
-                child: Text('🍛 Diner'),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.restaurant, size: 16, color: Color(0xFFE65100)),
+                    SizedBox(width: 6),
+                    Text('Diner'),
+                  ],
+                ),
               ),
               DropdownMenuItem(
                 value: UserRole.messOwner,
-                child: Text('👨‍🍳 Owner'),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.storefront, size: 16, color: Color(0xFF2E7D32)),
+                    SizedBox(width: 6),
+                    Text('Owner'),
+                  ],
+                ),
               ),
               DropdownMenuItem(
                 value: UserRole.admin,
-                child: Text('🛡️ Admin'),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.admin_panel_settings, size: 16, color: Color(0xFF3B82F6)),
+                    SizedBox(width: 6),
+                    Text('Admin'),
+                  ],
+                ),
               ),
             ],
             onChanged: (role) {
@@ -365,15 +386,36 @@ class _HomeScreenState extends State<HomeScreen> {
               items: const [
                 DropdownMenuItem(
                   value: DinerPersona.student,
-                  child: Text('🎓 Student'),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.school, size: 16, color: Color(0xFFE65100)),
+                      SizedBox(width: 6),
+                      Text('Student'),
+                    ],
+                  ),
                 ),
                 DropdownMenuItem(
                   value: DinerPersona.working,
-                  child: Text('💼 Working'),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.work, size: 16, color: Color(0xFF2E7D32)),
+                      SizedBox(width: 6),
+                      Text('Working'),
+                    ],
+                  ),
                 ),
                 DropdownMenuItem(
                   value: DinerPersona.senior,
-                  child: Text('👓 Senior'),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.elderly, size: 16, color: Color(0xFFFF9800)),
+                      SizedBox(width: 6),
+                      Text('Senior'),
+                    ],
+                  ),
                 ),
               ],
               onChanged: (persona) {
@@ -555,7 +597,14 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('🍛', style: TextStyle(fontSize: 36)),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE65100).withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(Icons.restaurant, size: 30, color: Color(0xFFE65100)),
+                ),
                 const SizedBox(height: 8),
                 Text(
                   tr('eat_title'),
@@ -597,7 +646,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const Divider(),
                 const SizedBox(height: 10),
                 Text(
-                  '🔑 Direct Diner Sign In by Persona:',
+                  'Direct Diner Sign In by Persona:',
                   style: TextStyle(
                     fontSize: isSenior ? 18 : 14,
                     fontWeight: FontWeight.bold,
@@ -616,7 +665,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     dense: true,
                     leading: const CircleAvatar(
                       backgroundColor: Color(0xFFE65100),
-                      child: Text('🎓', style: TextStyle(fontSize: 16)),
+                      child: Icon(Icons.school, color: Colors.white, size: 18),
                     ),
                     title: Text(
                       tr('login_as_student'),
@@ -655,7 +704,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     dense: true,
                     leading: const CircleAvatar(
                       backgroundColor: Color(0xFF2E7D32),
-                      child: Text('💼', style: TextStyle(fontSize: 16)),
+                      child: Icon(Icons.work, color: Colors.white, size: 18),
                     ),
                     title: Text(
                       tr('login_as_working'),
@@ -694,7 +743,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     dense: true,
                     leading: const CircleAvatar(
                       backgroundColor: Color(0xFFFF9800),
-                      child: Text('👓', style: TextStyle(fontSize: 16)),
+                      child: Icon(Icons.elderly, color: Colors.black, size: 18),
                     ),
                     title: Text(
                       tr('login_as_senior'),
@@ -743,7 +792,14 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('👨‍🍳', style: TextStyle(fontSize: 36)),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF2E7D32).withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(Icons.storefront, size: 30, color: Color(0xFF2E7D32)),
+                ),
                 const SizedBox(height: 8),
                 Text(
                   tr('manage_title'),
@@ -794,7 +850,14 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('🛡️', style: TextStyle(fontSize: 36)),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF3B82F6).withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(Icons.admin_panel_settings, size: 30, color: Color(0xFF3B82F6)),
+                ),
                 const SizedBox(height: 8),
                 Text(
                   tr('admin_title'),
@@ -1333,18 +1396,34 @@ class _HomeScreenState extends State<HomeScreen> {
                                       style: TextStyle(
                                           fontSize: 11, color: Colors.grey)),
                                   const SizedBox(height: 2),
-                                  Text(
-                                    subscriber.todayLunchStatus == 'ATTENDED'
-                                        ? 'Attended ✓'
-                                        : 'Scheduled ⏳',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                      color: subscriber.todayLunchStatus ==
-                                              'ATTENDED'
-                                          ? Colors.green
-                                          : Colors.orange,
-                                    ),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        subscriber.todayLunchStatus == 'ATTENDED'
+                                            ? Icons.check_circle
+                                            : Icons.schedule,
+                                        size: 13,
+                                        color: subscriber.todayLunchStatus ==
+                                                'ATTENDED'
+                                            ? Colors.green
+                                            : Colors.orange,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        subscriber.todayLunchStatus == 'ATTENDED'
+                                            ? 'Attended'
+                                            : 'Scheduled',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                          color: subscriber.todayLunchStatus ==
+                                                  'ATTENDED'
+                                              ? Colors.green
+                                              : Colors.orange,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -1358,21 +1437,40 @@ class _HomeScreenState extends State<HomeScreen> {
                                       style: TextStyle(
                                           fontSize: 11, color: Colors.grey)),
                                   const SizedBox(height: 2),
-                                  Text(
-                                    isSkipped
-                                        ? 'Skipped ❌ (₹50 credited)'
-                                        : isAttended
-                                            ? 'Attended ✓'
-                                            : 'Scheduled ⏳ (Prep needed)',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                      color: isSkipped
-                                          ? Colors.red
-                                          : isAttended
-                                              ? Colors.green
-                                              : const Color(0xFFE65100),
-                                    ),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        isSkipped
+                                            ? Icons.cancel
+                                            : isAttended
+                                                ? Icons.check_circle
+                                                : Icons.schedule,
+                                        size: 13,
+                                        color: isSkipped
+                                            ? Colors.red
+                                            : isAttended
+                                                ? Colors.green
+                                                : const Color(0xFFE65100),
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        isSkipped
+                                            ? 'Skipped (₹50 credited)'
+                                            : isAttended
+                                                ? 'Attended'
+                                                : 'Scheduled (Prep needed)',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                          color: isSkipped
+                                              ? Colors.red
+                                              : isAttended
+                                                  ? Colors.green
+                                                  : const Color(0xFFE65100),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -1548,7 +1646,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         setState(() {
                           _isOcrScanned = false;
                           _statusMessage =
-                              '✅ Menu verified & published to all subscribers!';
+                              'Menu verified & published to all subscribers!';
                         });
                       },
                       child: Text(
@@ -1635,7 +1733,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Namaste, ${sub.userName} 🙏',
+                  'Namaste, ${sub.userName}',
                   style: TextStyle(
                     fontSize: isSenior ? 24 : 20,
                     fontWeight: FontWeight.bold,
@@ -1650,16 +1748,27 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
-                if (sub.institutionOrOrg.isNotEmpty)
-                  Text(
-                    '🏢 ${sub.institutionOrOrg}',
-                    style: TextStyle(
-                      fontSize: isSenior ? 14 : 11,
-                      color: Colors.blueGrey,
-                      fontStyle: FontStyle.italic,
-                    ),
-                    overflow: TextOverflow.ellipsis,
+                if (sub.institutionOrOrg.isNotEmpty) ...[
+                  const SizedBox(height: 2),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.business, size: 13, color: Colors.blueGrey),
+                      const SizedBox(width: 4),
+                      Flexible(
+                        child: Text(
+                          sub.institutionOrOrg,
+                          style: TextStyle(
+                            fontSize: isSenior ? 14 : 11,
+                            color: Colors.blueGrey,
+                            fontStyle: FontStyle.italic,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
+                ],
               ],
             );
 
@@ -1872,13 +1981,22 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                '⏰ ${tr('cutoff_dinner_alert')}',
-                style: const TextStyle(
-                  color: Color(0xFFBF360C),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(Icons.access_time_filled, color: Color(0xFFBF360C), size: 18),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      tr('cutoff_dinner_alert'),
+                      style: const TextStyle(
+                        color: Color(0xFFBF360C),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 12),
               SizedBox(
@@ -2141,7 +2259,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               CircleAvatar(
                                 radius: 14,
                                 backgroundColor: Color(0xFFE65100),
-                                child: Text('🎓', style: TextStyle(fontSize: 13)),
+                                child: Icon(Icons.school, size: 14, color: Colors.white),
                               ),
                               SizedBox(width: 8),
                               Text(
@@ -2172,11 +2290,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                       ),
                       const Text(
-                        '🏫 COEP Technological University, Pune',
+                        'COEP Technological University, Pune',
                         style: TextStyle(fontSize: 11, color: Colors.grey),
                       ),
                       const Text(
-                        '📋 Monthly 2-Meals • 42 Meals Left • ₹100 Credit',
+                        'Monthly 2-Meals • 42 Meals Left • ₹100 Credit',
                         style: TextStyle(fontSize: 11, color: Colors.grey),
                       ),
                       const SizedBox(height: 6),
@@ -2220,7 +2338,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               const SnackBar(
                                 backgroundColor: Color(0xFFE65100),
                                 content: Text(
-                                  'Logged in as Rohan Patil! 🎓 Student Mode & Dark Theme Activated.',
+                                  'Logged in as Rohan Patil! Student Mode & Dark Theme Activated.',
                                 ),
                               ),
                             );
@@ -2258,7 +2376,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               CircleAvatar(
                                 radius: 14,
                                 backgroundColor: Color(0xFF2E7D32),
-                                child: Text('💼', style: TextStyle(fontSize: 13)),
+                                child: Icon(Icons.work, size: 14, color: Colors.white),
                               ),
                               SizedBox(width: 8),
                               Text(
@@ -2289,11 +2407,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                       ),
                       const Text(
-                        '🏢 Infosys Campus, Hinjawadi Phase 2',
+                        'Infosys Campus, Hinjawadi Phase 2',
                         style: TextStyle(fontSize: 11, color: Colors.grey),
                       ),
                       const Text(
-                        '📋 Executive Lunch Box • 24 Meals Left • ₹50 Credit',
+                        'Executive Lunch Box • 24 Meals Left • ₹50 Credit',
                         style: TextStyle(fontSize: 11, color: Colors.grey),
                       ),
                       const SizedBox(height: 6),
@@ -2337,7 +2455,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               const SnackBar(
                                 backgroundColor: Color(0xFF2E7D32),
                                 content: Text(
-                                  'Logged in as Priya Sharma! 💼 Working Adult Mode & Light Theme Activated.',
+                                  'Logged in as Priya Sharma! Working Adult Mode & Light Theme Activated.',
                                 ),
                               ),
                             );
@@ -2375,7 +2493,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               CircleAvatar(
                                 radius: 14,
                                 backgroundColor: Color(0xFFFF9800),
-                                child: Text('👓', style: TextStyle(fontSize: 13)),
+                                child: Icon(Icons.elderly, size: 14, color: Colors.black),
                               ),
                               SizedBox(width: 8),
                               Text(
@@ -2406,11 +2524,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                       ),
                       const Text(
-                        '🏡 Senior Citizens Forum, Kothrud, Pune',
+                        'Senior Citizens Forum, Kothrud, Pune',
                         style: TextStyle(fontSize: 11, color: Colors.grey),
                       ),
                       const Text(
-                        '📋 Senior Nutritional Care • 54 Meals Left',
+                        'Senior Nutritional Care • 54 Meals Left',
                         style: TextStyle(fontSize: 11, color: Colors.grey),
                       ),
                       const SizedBox(height: 6),
@@ -2457,7 +2575,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               const SnackBar(
                                 backgroundColor: Color(0xFFFF9800),
                                 content: Text(
-                                  'Logged in as Nana Saheb Joshi! 👓 Senior Citizen Mode & WCAG AAA Contrast Activated.',
+                                  'Logged in as Nana Saheb Joshi! Senior Citizen Mode & WCAG AAA Contrast Activated.',
                                 ),
                               ),
                             );
@@ -2674,12 +2792,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 });
                 Navigator.of(ctx).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('✅ New Mess registered & FSSAI verified!')),
+                  const SnackBar(content: Text('New Mess registered & FSSAI verified!')),
                 );
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                      content: Text('⚠️ Please enter valid name and 14-digit FSSAI number.')),
+                      content: Text('Please enter valid name and 14-digit FSSAI number.')),
                 );
               }
             },
