@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MessLink (मेसलिंक) — Indian Mess Discovery & Meal Subscriptions</title>
+  <meta name="description" content="Discover verified Indian messes, view today's live menu in Marathi, Hindi & English, skip meals before cutoff, and manage subscriptions with zero food waste.">
+  <link rel="stylesheet" href="styles.css">
+  <!-- PWA manifest & Apple Touch Icon -->
+  <meta name="theme-color" content="#e65100">
+</head>
+<body class="mode-student">
+
+  <!-- Connectivity Status Banner -->
+  <div id="network-banner" class="network-banner">
+    ⚠️ Offline Mode: Changes are safely stored in queue and will sync automatically.
+  </div>
+
+  <!-- Main Navigation Bar -->
+  <header class="navbar">
+    <a class="brand" onclick="navigateTo('LANDING')">
+      <div class="brand-icon">M</div>
+      <div class="brand-text">
+        <h1 data-i18n="app_title">MessLink</h1>
+        <span data-i18n="app_tagline">Indian Mess Discovery & Subscriptions</span>
+      </div>
+    </a>
+
+    <div class="nav-controls">
+      <!-- Persona Mode Switcher -->
+      <select id="persona-select" class="select-control" aria-label="Presentation Persona">
+        <option value="STUDENT">🎓 Student Mode (Dark)</option>
+        <option value="WORKING">💼 Working Adult (Light)</option>
+        <option value="SENIOR">👓 Senior Citizen (High-Contrast)</option>
+      </select>
+
+      <!-- Language Selector -->
+      <select id="lang-select" class="select-control" aria-label="Select Language">
+        <option value="en" selected>English</option>
+        <option value="mr">मराठी (Marathi)</option>
+        <option value="hi">हिन्दी (Hindi)</option>
+      </select>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="container">
+
+    <!-- ========================================== -->
+    <!-- VIEW 1: HERO & DUAL-PATH DECISION GATE     -->
+    <!-- ========================================== -->
+    <section id="view-landing" class="view-section active">
+      <div class="hero-gate">
+        <div class="hero-badge" data-i18n="landing_badge">🍽️ India's #1 Mess Subscription Network</div>
+        <h2 class="hero-title" data-i18n="landing_heading">Are you here to Eat or Manage a Mess?</h2>
+        <p class="hero-subtitle" data-i18n="landing_subheading">
+          Connecting students and working professionals with nutritious local messes. Skip meals before cutoff, avoid food waste, and save money.
+        </p>
+
+        <!-- The Central Decision Fork -->
+        <div class="dual-gate-cards">
+          <!-- Path A: Eat (Diner Hub) -->
+          <div class="gate-card eat" onclick="navigateTo('DINER')">
+            <div class="gate-icon">🍛</div>
+            <h3 data-i18n="eat_title">Eat at a Mess</h3>
+            <p data-i18n="eat_desc">
+              Discover verified messes in Pune & Kota. View today's menu, skip meals in 1-click, and track your meal credits.
+            </p>
+            <button class="btn btn-primary" data-i18n="eat_cta">Explore Diners' Hub →</button>
+          </div>
+
+          <!-- Path B: Manage a Mess (Owner Portal) -->
+          <div class="gate-card manage" onclick="navigateTo('OWNER')">
+            <div class="gate-icon">👨‍🍳</div>
+            <h3 data-i18n="manage_title">Manage a Mess</h3>
+            <p data-i18n="manage_desc">
+              Predict today's exact headcount, reduce kitchen food wastage by 30%, scan daily menus with AI, and automate dues.
+            </p>
+            <button class="btn btn-secondary" data-i18n="manage_cta">Open Owner Portal →</button>
+          </div>
+        </div>
+
+        <!-- Verified Messes Live Discovery Banner -->
+        <div style="background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; text-align: left; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 4px;">📍 Featured Active Mess: Annapurna Bhojanalaya (अन्नपूर्णा भोजनालय)</div>
+            <div style="font-size: 0.85rem; color: var(--text-muted);">Karve Nagar, Pune • Pure Veg • ⭐ 4.8 (342 reviews) • <span style="color: var(--color-veg-green); font-weight: 600;">✓ FSSAI Lic: 11522036000123</span></div>
+          </div>
+          <button class="btn btn-outline" onclick="navigateTo('DINER')">View Today's Menu</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW 2: DINER / CUSTOMER HUB              -->
+    <!-- ========================================== -->
+    <section id="view-diner" class="view-section">
+      <div class="section-header">
+        <div>
+          <h2>Namaste, <span id="diner-user-name">Rohan Patil</span> 🙏</h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Annapurna Bhojanalaya • Monthly 2-Meal Subscription</p>
+        </div>
+        <button class="btn btn-outline" onclick="navigateTo('LANDING')">← Back to Home</button>
+      </div>
+
+      <!-- Quick Metrics Grid -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="title" data-i18n="meals_remaining">Remaining Meals</div>
+          <div class="value" id="diner-meals-left">42 / 60</div>
+        </div>
+        <div class="metric-card success">
+          <div class="title" data-i18n="credits_balance">Wallet Credits Balance</div>
+          <div class="value" id="diner-credits-balance">₹100</div>
+        </div>
+        <div class="metric-card">
+          <div class="title" data-i18n="skips_left">Monthly Skips Used</div>
+          <div class="value" id="diner-skips-used">2 / 6</div>
+        </div>
+      </div>
+
+      <!-- Skip Success Notification Banner -->
+      <div id="skip-success-banner" class="cutoff-alert" style="display: none; background-color: var(--color-veg-light); border-left-color: var(--color-veg-green); color: var(--color-veg-green);">
+      </div>
+
+      <!-- Cutoff Warning Alert -->
+      <div class="cutoff-alert">
+        <div class="cutoff-text">
+          ⏰ <span data-i18n="cutoff_dinner_alert">Dinner Skip Cutoff: 05:00 PM IST. You can skip until 5:00 PM today.</span>
+        </div>
+        <button id="skip-meal-btn" class="btn btn-primary" onclick="handleSkipMeal()" data-i18n="skip_action">
+          Skip Tonight's Dinner & Save ₹50
+        </button>
+      </div>
+
+      <!-- Today's Menu Card -->
+      <div class="menu-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 2px solid var(--border-color); padding-bottom: 12px;">
+          <h3 style="font-size: 1.3rem; font-weight: 700;" data-i18n="today_menu">Today's Verified Menu</h3>
+          <span class="badge badge-success">✓ 100% Pure Veg & Fresh</span>
+        </div>
+        <div id="diner-menu-items">
+          <!-- Dynamically populated by app.js in selected language -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW 3: DEDICATED MESS OWNER PORTAL        -->
+    <!-- ========================================== -->
+    <section id="view-owner" class="view-section">
+      <div class="section-header">
+        <div>
+          <h2 data-i18n="owner_dashboard">Mess Operations Dashboard</h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Annapurna Bhojanalaya | FSSAI Lic: 11522036000123 (Verified)</p>
+        </div>
+        <button class="btn btn-outline" onclick="navigateTo('LANDING')">← Back to Home</button>
+      </div>
+
+      <!-- Headcount Forecast Cards -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="title">Lunch Headcount (Final)</div>
+          <div class="value" id="owner-lunch-expected">84 Meals</div>
+          <small style="color: var(--text-muted); font-size: 0.8rem;">Cutoff Passed (09:00 AM IST) • <span id="owner-lunch-skips">11 Skips</span></small>
+        </div>
+        <div class="metric-card success">
+          <div class="title">Dinner Headcount (Forecast)</div>
+          <div class="value" id="owner-dinner-expected">87 Meals</div>
+          <small style="color: var(--text-muted); font-size: 0.8rem;">Cutoff closes at 05:00 PM IST • <span id="owner-dinner-skips">8 Skips</span></small>
+        </div>
+        <div class="metric-card">
+          <div class="title">Kitchen Food Savings</div>
+          <div class="value">~₹1,240</div>
+          <small style="color: var(--text-muted); font-size: 0.8rem;">Saved today by not overcooking</small>
+        </div>
+      </div>
+
+      <!-- AI Menu Scanner Section -->
+      <div class="ocr-box">
+        <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 6px;" data-i18n="scan_menu_title">AI Menu Photo Scanner (OCR)</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;" data-i18n="scan_menu_desc">
+          Snap a photo of your daily chalkboard or whiteboard menu in Marathi, Hindi, or English.
+        </p>
+        <button id="ocr-scan-btn" class="btn btn-primary" onclick="simulateOCRScan()" data-i18n="simulate_scan_btn">
+          📸 Scan Blackboard Menu Photo
+        </button>
+
+        <!-- Scanned Items Review Box (Hidden until scanned) -->
+        <div id="ocr-result-preview" style="display: none; margin-top: 24px; text-align: left; background-color: var(--bg-secondary); border-radius: var(--radius-md); padding: 20px; border: 1px solid var(--border-color);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <h4 style="font-size: 1.1rem; font-weight: 700;">Extracted Menu Items for Dinner (Please Review)</h4>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Trilingual Extraction Ready</span>
+          </div>
+          <div id="ocr-items-list" style="margin-bottom: 16px;"></div>
+          <button id="ocr-publish-btn" class="btn btn-secondary" onclick="publishScannedMenu()" data-i18n="review_publish_btn">
+            Confirm & Publish to Subscribers
+          </button>
+        </div>
+      </div>
+
+      <!-- Financial Ledger Table -->
+      <div class="menu-card">
+        <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 14px;" data-i18n="ledger_title">Transaction Ledger (Double-Entry)</h3>
+        <div style="overflow-x: auto;">
+          <table class="ledger-table">
+            <thead>
+              <tr>
+                <th data-i18n="date">Date & Time</th>
+                <th data-i18n="type">Transaction Type</th>
+                <th data-i18n="amount">Amount</th>
+                <th data-i18n="balance">Balance</th>
+              </tr>
+            </thead>
+            <tbody id="owner-ledger-tbody">
+              <!-- Dynamically populated from API -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Legal & Compliance Modal (DPDPA 2023) -->
+  <div id="dpdpa-modal" class="modal-backdrop">
+    <div class="modal-content">
+      <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 12px;" data-i18n="policy_dpdpa_title">DPDPA 2023 & Indian Compliance</h3>
+      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 14px;">
+        MessLink operates strictly in accordance with the <strong>Digital Personal Data Protection Act, 2023</strong> and the <strong>Food Safety and Standards Act, 2006</strong>.
+      </p>
+      <ul style="font-size: 0.85rem; padding-left: 20px; margin-bottom: 18px; line-height: 1.8;">
+        <li><strong>Data Fiduciary</strong>: MessLink Technologies India Pvt. Ltd.</li>
+        <li><strong>FSSAI Enforcement</strong>: All listed messes must hold an active 14-digit FSSAI license.</li>
+        <li><strong>Zero Raw Card Storage</strong>: We do not store card credentials or UPI PINs.</li>
+        <li><strong>Data Principal Rights</strong>: You may export or request complete erasure of your profile at any time.</li>
+      </ul>
+      <button class="btn btn-outline" style="width: 100%;" onclick="closeModal('dpdpa-modal')">Close Notice</button>
+    </div>
+  </div>
+
+  <!-- Accessible Footer -->
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="javascript:void(0)" onclick="openModal('dpdpa-modal')">DPDPA 2023 Privacy</a>
+      <a href="javascript:void(0)" onclick="openModal('dpdpa-modal')">FSSAI Compliance</a>
+      <a href="javascript:void(0)" onclick="openModal('dpdpa-modal')">Terms & Refund Policy</a>
+      <a href="javascript:void(0)" onclick="openModal('dpdpa-modal')">Grievance Officer</a>
+    </div>
+    <p data-i18n="footer_text">
+      MessLink Technologies India Pvt. Ltd. | Compliant with DPDPA 2023, FSSAI Act 2006, and IT Act 2000.
+    </p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
