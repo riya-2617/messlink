@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'localization/app_strings.dart';
+import 'models/models.dart';
 import 'services/api_service.dart';
 
 void main() {
   runApp(const MessLinkApp());
 }
-
-enum PersonaMode { student, working, senior }
 
 class MessLinkApp extends StatefulWidget {
   const MessLinkApp({super.key});
@@ -17,7 +16,12 @@ class MessLinkApp extends StatefulWidget {
 
 class _MessLinkAppState extends State<MessLinkApp> {
   String _currentLang = 'en';
-  PersonaMode _currentPersona = PersonaMode.student;
+
+  // Active Authenticated Role
+  UserRole _currentRole = UserRole.diner;
+
+  // For Diner Role: Dynamic Persona (Single login adapting UI)
+  DinerPersona _dinerPersona = DinerPersona.student;
 
   void _updateLanguage(String lang) {
     setState(() {
@@ -25,15 +29,62 @@ class _MessLinkAppState extends State<MessLinkApp> {
     });
   }
 
-  void _updatePersona(PersonaMode mode) {
+  void _updateRole(UserRole role) {
     setState(() {
-      _currentPersona = mode;
+      _currentRole = role;
+    });
+  }
+
+  void _updateDinerPersona(DinerPersona persona) {
+    setState(() {
+      _dinerPersona = persona;
     });
   }
 
   ThemeData _buildTheme() {
-    switch (_currentPersona) {
-      case PersonaMode.student:
+    if (_currentRole == UserRole.admin) {
+      // Executive Admin Theme
+      return ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: const Color(0xFF0A0F1D),
+        primaryColor: const Color(0xFF3B82F6),
+        colorScheme: const ColorScheme.dark(
+          primary: Color(0xFF3B82F6),
+          secondary: Color(0xFF10B981),
+          surface: Color(0xFF161F33),
+          onSurface: Color(0xFFF8FAFC),
+        ),
+        cardTheme: const CardThemeData(
+          color: Color(0xFF161F33),
+          elevation: 4,
+        ),
+      );
+    }
+
+    if (_currentRole == UserRole.messOwner) {
+      // Kitchen Operations Theme
+      return ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: const Color(0xFF1E1510),
+        primaryColor: const Color(0xFFE65100),
+        colorScheme: const ColorScheme.dark(
+          primary: Color(0xFFE65100),
+          secondary: Color(0xFF2E7D32),
+          surface: Color(0xFF2A1F17),
+          onSurface: Color(0xFFFFF3E0),
+        ),
+        cardTheme: const CardThemeData(
+          color: Color(0xFF2A1F17),
+          elevation: 4,
+        ),
+      );
+    }
+
+    // Role 3: Diner / Customer (Dynamic UI based on Persona)
+    switch (_dinerPersona) {
+      case DinerPersona.student:
         return ThemeData(
           useMaterial3: true,
           brightness: Brightness.dark,
@@ -50,7 +101,7 @@ class _MessLinkAppState extends State<MessLinkApp> {
             elevation: 4,
           ),
         );
-      case PersonaMode.working:
+      case DinerPersona.working:
         return ThemeData(
           useMaterial3: true,
           brightness: Brightness.light,
@@ -67,7 +118,7 @@ class _MessLinkAppState extends State<MessLinkApp> {
             elevation: 2,
           ),
         );
-      case PersonaMode.senior:
+      case DinerPersona.senior:
         return ThemeData(
           useMaterial3: true,
           brightness: Brightness.dark,
@@ -103,9 +154,11 @@ class _MessLinkAppState extends State<MessLinkApp> {
       theme: _buildTheme(),
       home: HomeScreen(
         currentLang: _currentLang,
-        currentPersona: _currentPersona,
+        currentRole: _currentRole,
+        dinerPersona: _dinerPersona,
         onLanguageChanged: _updateLanguage,
-        onPersonaChanged: _updatePersona,
+        onRoleChanged: _updateRole,
+        onPersonaChanged: _updateDinerPersona,
       ),
     );
   }
@@ -113,15 +166,19 @@ class _MessLinkAppState extends State<MessLinkApp> {
 
 class HomeScreen extends StatefulWidget {
   final String currentLang;
-  final PersonaMode currentPersona;
+  final UserRole currentRole;
+  final DinerPersona dinerPersona;
   final ValueChanged<String> onLanguageChanged;
-  final ValueChanged<PersonaMode> onPersonaChanged;
+  final ValueChanged<UserRole> onRoleChanged;
+  final ValueChanged<DinerPersona> onPersonaChanged;
 
   const HomeScreen({
     super.key,
     required this.currentLang,
-    required this.currentPersona,
+    required this.currentRole,
+    required this.dinerPersona,
     required this.onLanguageChanged,
+    required this.onRoleChanged,
     required this.onPersonaChanged,
   });
 
@@ -130,13 +187,43 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _activeViewIndex = 0; // 0: Landing, 1: Diner Hub, 2: Owner Portal
+  int _activeViewIndex = 0; // 0: Landing, 1: Diner Hub, 2: Owner Portal, 3: Admin Console
   bool _isSkipping = false;
   bool _isOcrScanning = false;
   bool _isOcrScanned = false;
   String? _statusMessage;
 
-  // Editable OCR scanned items
+  // Platform Messes Managed by Admin
+  final List<Mess> _platformMesses = [
+    Mess(
+      id: "mess_pune_01",
+      name: "Annapurna Bhojanalaya (अन्नपूर्णा भोजनालय)",
+      fssai: "11522036000123",
+      fssaiVerified: true,
+      city: "Pune",
+      locality: "Karve Nagar",
+      dietary: "PURE_VEG",
+      rating: 4.8,
+      pricePerMonth: 3200,
+      skipCreditPerMeal: 50,
+      phone: "+91 98220 12345",
+    ),
+    Mess(
+      id: "mess_kota_02",
+      name: "Radhe Krishna Mess (राधे कृष्णा मेस)",
+      fssai: "12221015000456",
+      fssaiVerified: false, // Pending verification
+      city: "Kota",
+      locality: "Rajiv Gandhi Nagar",
+      dietary: "PURE_VEG",
+      rating: 4.7,
+      pricePerMonth: 3500,
+      skipCreditPerMeal: 55,
+      phone: "+91 94140 98765",
+    ),
+  ];
+
+  // Editable OCR scanned items for Mess Owner
   final List<Map<String, dynamic>> _ocrDishes = [
     {
       'category': 'Sabzi',
@@ -184,7 +271,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isSenior = widget.currentPersona == PersonaMode.senior;
+    final isSenior = widget.currentRole == UserRole.diner &&
+        widget.dinerPersona == DinerPersona.senior;
 
     return Scaffold(
       appBar: AppBar(
@@ -196,12 +284,16 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE65100),
+                  color: widget.currentRole == UserRole.admin
+                      ? const Color(0xFF3B82F6)
+                      : const Color(0xFFE65100),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: const Text('M',
                     style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14)),
               ),
               const SizedBox(width: 6),
               Flexible(
@@ -215,31 +307,67 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         actions: [
-          // Persona Switcher
-          DropdownButton<PersonaMode>(
-            value: widget.currentPersona,
+          // 1. Role Selector (Admin, Mess Owner, Diner)
+          DropdownButton<UserRole>(
+            value: widget.currentRole,
             underline: const SizedBox(),
             isDense: true,
             items: const [
               DropdownMenuItem(
-                value: PersonaMode.student,
-                child: Text('🎓 Student'),
+                value: UserRole.diner,
+                child: Text('🍛 Diner'),
               ),
               DropdownMenuItem(
-                value: PersonaMode.working,
-                child: Text('💼 Working'),
+                value: UserRole.messOwner,
+                child: Text('👨‍🍳 Owner'),
               ),
               DropdownMenuItem(
-                value: PersonaMode.senior,
-                child: Text('👓 Senior'),
+                value: UserRole.admin,
+                child: Text('🛡️ Admin'),
               ),
             ],
-            onChanged: (mode) {
-              if (mode != null) widget.onPersonaChanged(mode);
+            onChanged: (role) {
+              if (role != null) {
+                widget.onRoleChanged(role);
+                // Automatically switch to role's primary view
+                setState(() {
+                  if (role == UserRole.admin) _activeViewIndex = 3;
+                  if (role == UserRole.messOwner) _activeViewIndex = 2;
+                  if (role == UserRole.diner) _activeViewIndex = 1;
+                });
+              }
             },
           ),
           const SizedBox(width: 6),
-          // Language Switcher
+
+          // 2. If Diner Role: Persona Selector (Student, Working, Senior)
+          if (widget.currentRole == UserRole.diner) ...[
+            DropdownButton<DinerPersona>(
+              value: widget.dinerPersona,
+              underline: const SizedBox(),
+              isDense: true,
+              items: const [
+                DropdownMenuItem(
+                  value: DinerPersona.student,
+                  child: Text('🎓 Student'),
+                ),
+                DropdownMenuItem(
+                  value: DinerPersona.working,
+                  child: Text('💼 Working'),
+                ),
+                DropdownMenuItem(
+                  value: DinerPersona.senior,
+                  child: Text('👓 Senior'),
+                ),
+              ],
+              onChanged: (persona) {
+                if (persona != null) widget.onPersonaChanged(persona);
+              },
+            ),
+            const SizedBox(width: 6),
+          ],
+
+          // 3. Language Selector
           DropdownButton<String>(
             value: widget.currentLang,
             underline: const SizedBox(),
@@ -262,6 +390,11 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              // Active Role Status Badge
+              _buildRoleBanner(),
+
+              const SizedBox(height: 12),
+
               // Main Active View
               _buildCurrentView(isSenior),
 
@@ -269,11 +402,62 @@ class _HomeScreenState extends State<HomeScreen> {
               const Divider(),
               const SizedBox(height: 12),
 
-              // Full Footer & Compliance
+              // Footer & Compliance
               _buildFooter(isSenior),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildRoleBanner() {
+    String roleLabel = tr('role_diner');
+    Color bannerColor = const Color(0xFFE65100);
+    IconData icon = Icons.person;
+
+    if (widget.currentRole == UserRole.admin) {
+      roleLabel = '${tr('role_admin')} (Full Platform Access)';
+      bannerColor = const Color(0xFF3B82F6);
+      icon = Icons.admin_panel_settings;
+    } else if (widget.currentRole == UserRole.messOwner) {
+      roleLabel = '${tr('role_owner')} (Annapurna Bhojanalaya)';
+      bannerColor = const Color(0xFFE65100);
+      icon = Icons.restaurant;
+    } else {
+      String personaTag = 'Student Profile';
+      if (widget.dinerPersona == DinerPersona.working) {
+        personaTag = 'Working Adult Profile';
+      } else if (widget.dinerPersona == DinerPersona.senior) {
+        personaTag = 'Senior Citizen Profile (High-Contrast & Large Fonts)';
+      }
+      roleLabel = '${tr('role_diner')} • $personaTag';
+      bannerColor = const Color(0xFF2E7D32);
+      icon = Icons.person_outline;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: bannerColor.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: bannerColor),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: bannerColor, size: 18),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              roleLabel,
+              style: TextStyle(
+                color: bannerColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -284,19 +468,20 @@ class _HomeScreenState extends State<HomeScreen> {
         return _buildDinerView(isSenior);
       case 2:
         return _buildOwnerView(isSenior);
+      case 3:
+        return _buildAdminView(isSenior);
       default:
         return _buildLandingView(isSenior);
     }
   }
 
   // ==========================================
-  // VIEW 0: HERO & DUAL PATH GATE
+  // VIEW 0: HERO & DECISION GATE
   // ==========================================
   Widget _buildLandingView(bool isSenior) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Landing Badge
         Center(
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
@@ -316,7 +501,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 16),
 
-        // Central Master Question
         Text(
           tr('landing_heading'),
           textAlign: TextAlign.center,
@@ -336,7 +520,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 24),
 
-        // Dual Gate Cards (Path A & Path B)
+        // Path A: Eat (Diner Hub)
         Card(
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -370,6 +554,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       foregroundColor: Colors.white,
                     ),
                     onPressed: () {
+                      widget.onRoleChanged(UserRole.diner);
                       setState(() => _activeViewIndex = 1);
                     },
                     child: Text(
@@ -386,6 +571,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 16),
 
+        // Path B: Manage a Mess (Owner Portal)
         Card(
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -419,6 +605,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       foregroundColor: Colors.white,
                     ),
                     onPressed: () {
+                      widget.onRoleChanged(UserRole.messOwner);
                       setState(() => _activeViewIndex = 2);
                     },
                     child: Text(
@@ -433,38 +620,52 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 16),
 
-        // Featured Active Mess Discovery Banner (Exact Parity with Website)
+        // Path C: Platform Admin Console
         Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-            side: const BorderSide(color: Color(0xFFE65100), width: 1),
-          ),
           child: Padding(
-            padding: const EdgeInsets.all(18),
+            padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const Text('🛡️', style: TextStyle(fontSize: 36)),
+                const SizedBox(height: 8),
                 Text(
-                  tr('featured_mess_title'),
+                  tr('admin_title'),
                   style: TextStyle(
-                    fontSize: isSenior ? 20 : 16,
+                    fontSize: isSenior ? 24 : 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  tr('featured_mess_subtitle'),
+                  tr('admin_desc'),
                   style: TextStyle(
-                    fontSize: isSenior ? 16 : 13,
+                    fontSize: isSenior ? 18 : 14,
                     color: isSenior ? Colors.white70 : Colors.grey,
                   ),
                 ),
-                const SizedBox(height: 14),
-                OutlinedButton(
-                  onPressed: () => setState(() => _activeViewIndex = 1),
-                  child: Text(tr('view_menu_cta')),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  height: isSenior ? 56 : 48,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF3B82F6),
+                      foregroundColor: Colors.white,
+                    ),
+                    onPressed: () {
+                      widget.onRoleChanged(UserRole.admin);
+                      setState(() => _activeViewIndex = 3);
+                    },
+                    child: Text(
+                      tr('admin_cta'),
+                      style: TextStyle(
+                          fontSize: isSenior ? 20 : 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -474,12 +675,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ==========================================
-  // VIEW 1: DINER / CUSTOMER HUB
-  // ==========================================
-  Widget _buildDinerView(bool isSenior) {
-    final sub = ApiService.fallbackSubscriber;
-
+  // =========================================================================
+  // ROLE 1: PLATFORM ADMIN CONSOLE (Register Mess, Verify FSSAI, Supervise)
+  // =========================================================================
+  Widget _buildAdminView(bool isSenior) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -490,18 +689,15 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Namaste, ${sub.userName} 🙏',
+                  tr('admin_dashboard'),
                   style: TextStyle(
                     fontSize: isSenior ? 24 : 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  'Annapurna Bhojanalaya • Pune',
-                  style: TextStyle(
-                    fontSize: isSenior ? 18 : 13,
-                    color: Colors.grey,
-                  ),
+                  tr('admin_subtitle'),
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
               ],
             ),
@@ -513,7 +709,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 16),
 
-        // 3 Key Metrics Cards (Remaining, Wallet Credits, Monthly Skips Used)
+        // Admin Overview Metric Cards
         Row(
           children: [
             Expanded(
@@ -522,20 +718,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.all(12),
                   child: Column(
                     children: [
-                      Text(tr('remaining_meals'),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: isSenior ? 14 : 11,
-                              color: Colors.grey)),
+                      const Text('Total Messes',
+                          style: TextStyle(fontSize: 11, color: Colors.grey)),
                       const SizedBox(height: 4),
                       Text(
-                        '${sub.mealsRemaining} / ${sub.totalMeals}',
-                        style: TextStyle(
-                          fontSize: isSenior ? 22 : 18,
+                        '${_platformMesses.length}',
+                        style: const TextStyle(
+                          fontSize: 22,
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFFE65100),
+                          color: Color(0xFF3B82F6),
                         ),
                       ),
+                      const Text('Active in Pune & Kota',
+                          style: TextStyle(fontSize: 9, color: Colors.grey)),
                     ],
                   ),
                 ),
@@ -548,20 +743,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.all(12),
                   child: Column(
                     children: [
-                      Text(tr('wallet_credits'),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: isSenior ? 14 : 11,
-                              color: Colors.grey)),
+                      const Text('FSSAI Verified',
+                          style: TextStyle(fontSize: 11, color: Colors.grey)),
                       const SizedBox(height: 4),
                       Text(
-                        '₹${sub.creditBalancePaise ~/ 100}',
-                        style: TextStyle(
-                          fontSize: isSenior ? 22 : 18,
+                        '${_platformMesses.where((m) => m.fssaiVerified).length} / ${_platformMesses.length}',
+                        style: const TextStyle(
+                          fontSize: 22,
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFF2E7D32),
+                          color: Color(0xFF10B981),
                         ),
                       ),
+                      const Text('Strict 14-Digit Check',
+                          style: TextStyle(fontSize: 9, color: Colors.grey)),
                     ],
                   ),
                 ),
@@ -574,20 +768,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.all(12),
                   child: Column(
                     children: [
-                      Text(tr('skips_used'),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: isSenior ? 14 : 11,
-                              color: Colors.grey)),
+                      const Text('Complaints',
+                          style: TextStyle(fontSize: 11, color: Colors.grey)),
                       const SizedBox(height: 4),
-                      Text(
-                        '${sub.skipsUsed} / ${sub.maxSkips}',
+                      const Text(
+                        '0 Pending',
                         style: TextStyle(
-                          fontSize: isSenior ? 22 : 18,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.blueGrey,
+                          color: Colors.teal,
                         ),
                       ),
+                      const Text('SLA Redressal < 48h',
+                          style: TextStyle(fontSize: 9, color: Colors.grey)),
                     ],
                   ),
                 ),
@@ -595,140 +788,108 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 18),
 
-        // Skip Success Notification Banner
-        if (_statusMessage != null)
-          Container(
-            padding: const EdgeInsets.all(14),
-            margin: const EdgeInsets.only(bottom: 16),
-            decoration: BoxDecoration(
-              color: const Color(0xFFE8F5E9),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: const Color(0xFF2E7D32)),
+        // Add New Mess Button
+        SizedBox(
+          height: 48,
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF3B82F6),
+              foregroundColor: Colors.white,
             ),
-            child: Row(
-              children: [
-                const Icon(Icons.check_circle, color: Color(0xFF2E7D32)),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    _statusMessage!,
-                    style: const TextStyle(
-                      color: Color(0xFF2E7D32),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-        // Cutoff Warning Alert & 1-Click Action
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: const Color(0xFFFFF3E0),
-            borderRadius: BorderRadius.circular(12),
-            border: const Border(
-              left: BorderSide(color: Color(0xFFE65100), width: 4),
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '⏰ ${tr('cutoff_dinner_alert')}',
-                style: const TextStyle(
-                  color: Color(0xFFBF360C),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-              ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                height: isSenior ? 56 : 48,
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFE65100),
-                    foregroundColor: Colors.white,
-                  ),
-                  icon: _isSkipping
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                              color: Colors.white, strokeWidth: 2),
-                        )
-                      : const Icon(Icons.cancel_schedule_send),
-                  label: Text(
-                    tr('skip_action'),
-                    style: TextStyle(
-                        fontSize: isSenior ? 20 : 16,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  onPressed: _isSkipping ? null : _handleSkipMeal,
-                ),
-              ),
-            ],
+            icon: const Icon(Icons.add_business),
+            label: Text(tr('register_mess_btn'),
+                style: const TextStyle(fontWeight: FontWeight.bold)),
+            onPressed: () => _showAddMessDialog(),
           ),
         ),
         const SizedBox(height: 20),
 
-        // Today's Verified Menu Card
+        // Registered Messes List (Admin controls verify/review)
         Card(
           child: Padding(
-            padding: const EdgeInsets.all(18),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      tr('today_menu'),
-                      style: TextStyle(
-                        fontSize: isSenior ? 22 : 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Chip(
-                      label: Text(tr('fresh_veg_badge'),
-                          style: const TextStyle(fontSize: 11, color: Colors.green)),
-                      backgroundColor: const Color(0xFFE8F5E9),
-                    ),
-                  ],
+                Text(
+                  tr('registered_messes'),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const Divider(),
-                ...ApiService.fallbackDinnerMenu.map((item) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                ..._platformMesses.map((mess) {
+                  return Container(
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(mess.name,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold, fontSize: 15)),
+                              Text('${mess.locality}, ${mess.city} • ${mess.dietary}',
+                                  style: const TextStyle(
+                                      fontSize: 12, color: Colors.grey)),
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  Text('FSSAI: ${mess.fssai}',
+                                      style: const TextStyle(
+                                          fontSize: 11, color: Colors.grey)),
+                                  const SizedBox(width: 8),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 6, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: mess.fssaiVerified
+                                          ? const Color(0xFFE8F5E9)
+                                          : const Color(0xFFFFF3E0),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: Text(
+                                      mess.fssaiVerified
+                                          ? tr('fssai_verified_status')
+                                          : tr('fssai_pending_status'),
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        color: mess.fssaiVerified
+                                            ? Colors.green
+                                            : Colors.orange,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                         Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              item.getLocalizedName(widget.currentLang),
-                              style: TextStyle(
-                                fontSize: isSenior ? 20 : 16,
-                                fontWeight: FontWeight.bold,
+                            OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 4),
+                                minimumSize: Size.zero,
                               ),
-                            ),
-                            Text(
-                              item.category,
-                              style: TextStyle(
-                                fontSize: isSenior ? 16 : 12,
-                                color: Colors.grey,
-                              ),
+                              onPressed: () {
+                                setState(() {
+                                  mess.fssaiVerified = !mess.fssaiVerified;
+                                });
+                              },
+                              child: Text(mess.fssaiVerified ? 'Revoke' : 'Verify'),
                             ),
                           ],
                         ),
-                        const Icon(Icons.check_circle_outline,
-                            color: Colors.green, size: 20),
                       ],
                     ),
                   );
@@ -741,9 +902,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ==========================================
-  // VIEW 2: MESS OWNER OPERATIONS PORTAL
-  // ==========================================
+  // =========================================================================
+  // ROLE 2: MESS OWNER PORTAL (Manage Own Mess, AI Menu OCR, Kitchen Headcount)
+  // =========================================================================
   Widget _buildOwnerView(bool isSenior) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -762,8 +923,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const Text(
-                  'Annapurna Bhojanalaya | FSSAI: 11522036000123',
-                  style: TextStyle(fontSize: 13, color: Colors.grey),
+                  'Annapurna Bhojanalaya | FSSAI: 11522036000123 (Verified)',
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
                 ),
               ],
             ),
@@ -786,7 +947,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Text(tr('lunch_headcount'),
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: isSenior ? 13 : 11, color: Colors.grey)),
+                          style: TextStyle(
+                              fontSize: isSenior ? 13 : 11, color: Colors.grey)),
                       const SizedBox(height: 4),
                       const Text(
                         '84 Meals',
@@ -799,7 +961,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(height: 2),
                       Text(tr('lunch_cutoff_passed'),
                           textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                          style:
+                              const TextStyle(fontSize: 10, color: Colors.grey)),
                     ],
                   ),
                 ),
@@ -814,7 +977,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Text(tr('dinner_headcount'),
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: isSenior ? 13 : 11, color: Colors.grey)),
+                          style: TextStyle(
+                              fontSize: isSenior ? 13 : 11, color: Colors.grey)),
                       const SizedBox(height: 4),
                       const Text(
                         '87 Meals',
@@ -827,7 +991,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(height: 2),
                       Text(tr('dinner_cutoff_active'),
                           textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                          style:
+                              const TextStyle(fontSize: 10, color: Colors.grey)),
                     ],
                   ),
                 ),
@@ -842,7 +1007,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Text(tr('kitchen_savings'),
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: isSenior ? 13 : 11, color: Colors.grey)),
+                          style: TextStyle(
+                              fontSize: isSenior ? 13 : 11, color: Colors.grey)),
                       const SizedBox(height: 4),
                       const Text(
                         '~₹1,240',
@@ -855,7 +1021,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(height: 2),
                       Text(tr('kitchen_savings_desc'),
                           textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                          style:
+                              const TextStyle(fontSize: 10, color: Colors.grey)),
                     ],
                   ),
                 ),
@@ -929,7 +1096,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Text(
                       'Extracted Menu Items for Dinner (Please Review):',
                       style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: isSenior ? 18 : 14),
+                          fontWeight: FontWeight.bold,
+                          fontSize: isSenior ? 18 : 14),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -1076,8 +1244,310 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // =========================================================================
+  // ROLE 3: DINER / SUBSCRIBER HUB (Single Login with Persona UI Switching)
+  // =========================================================================
+  Widget _buildDinerView(bool isSenior) {
+    final sub = ApiService.fallbackSubscriber;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Namaste, ${sub.userName} 🙏',
+                  style: TextStyle(
+                    fontSize: isSenior ? 24 : 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'Annapurna Bhojanalaya • Pune',
+                  style: TextStyle(
+                    fontSize: isSenior ? 18 : 13,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+            OutlinedButton(
+              onPressed: () => setState(() => _activeViewIndex = 0),
+              child: Text(tr('back_home')),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+
+        // Senior Citizen Quick Call Button
+        if (isSenior) ...[
+          Container(
+            padding: const EdgeInsets.all(12),
+            margin: const EdgeInsets.only(bottom: 14),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Need Help? Call Mess Manager:',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16),
+                ),
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF2E7D32),
+                    foregroundColor: Colors.white,
+                  ),
+                  icon: const Icon(Icons.phone),
+                  label: const Text('Call Now'),
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Dialing Mess Manager: +91 98220 12345')),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
+
+        // 3 Key Metrics Cards (Remaining, Wallet Credits, Monthly Skips Used)
+        Row(
+          children: [
+            Expanded(
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    children: [
+                      Text(tr('remaining_meals'),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: isSenior ? 14 : 11, color: Colors.grey)),
+                      const SizedBox(height: 4),
+                      Text(
+                        '${sub.mealsRemaining} / ${sub.totalMeals}',
+                        style: TextStyle(
+                          fontSize: isSenior ? 22 : 18,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFFE65100),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    children: [
+                      Text(tr('wallet_credits'),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: isSenior ? 14 : 11, color: Colors.grey)),
+                      const SizedBox(height: 4),
+                      Text(
+                        '₹${sub.creditBalancePaise ~/ 100}',
+                        style: TextStyle(
+                          fontSize: isSenior ? 22 : 18,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF2E7D32),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    children: [
+                      Text(tr('skips_used'),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: isSenior ? 14 : 11, color: Colors.grey)),
+                      const SizedBox(height: 4),
+                      Text(
+                        '${sub.skipsUsed} / ${sub.maxSkips}',
+                        style: TextStyle(
+                          fontSize: isSenior ? 22 : 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blueGrey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+
+        // Skip Success Notification Banner
+        if (_statusMessage != null)
+          Container(
+            padding: const EdgeInsets.all(14),
+            margin: const EdgeInsets.only(bottom: 16),
+            decoration: BoxDecoration(
+              color: const Color(0xFFE8F5E9),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: const Color(0xFF2E7D32)),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.check_circle, color: Color(0xFF2E7D32)),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    _statusMessage!,
+                    style: const TextStyle(
+                      color: Color(0xFF2E7D32),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+        // Cutoff Warning Alert & 1-Click Action
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xFFFFF3E0),
+            borderRadius: BorderRadius.circular(12),
+            border: const Border(
+              left: BorderSide(color: Color(0xFFE65100), width: 4),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '⏰ ${tr('cutoff_dinner_alert')}',
+                style: const TextStyle(
+                  color: Color(0xFFBF360C),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                height: isSenior ? 56 : 48,
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFE65100),
+                    foregroundColor: Colors.white,
+                  ),
+                  icon: _isSkipping
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                              color: Colors.white, strokeWidth: 2),
+                        )
+                      : const Icon(Icons.cancel_schedule_send),
+                  label: Text(
+                    tr('skip_action'),
+                    style: TextStyle(
+                        fontSize: isSenior ? 20 : 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: _isSkipping ? null : _handleSkipMeal,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 20),
+
+        // Today's Verified Menu Card
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      tr('today_menu'),
+                      style: TextStyle(
+                        fontSize: isSenior ? 22 : 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Chip(
+                      label: Text(tr('fresh_veg_badge'),
+                          style: const TextStyle(
+                              fontSize: 11, color: Colors.green)),
+                      backgroundColor: const Color(0xFFE8F5E9),
+                    ),
+                  ],
+                ),
+                const Divider(),
+                ...ApiService.fallbackDinnerMenu.map((item) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item.getLocalizedName(widget.currentLang),
+                              style: TextStyle(
+                                fontSize: isSenior ? 20 : 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              item.category,
+                              style: TextStyle(
+                                fontSize: isSenior ? 16 : 12,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Icon(Icons.check_circle_outline,
+                            color: Colors.green, size: 20),
+                      ],
+                    ),
+                  );
+                }),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   // ==========================================
-  // FOOTER & LEGAL MODAL
+  // FOOTER & DIALOGS
   // ==========================================
   Widget _buildFooter(bool isSenior) {
     return Column(
@@ -1166,6 +1636,82 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.of(ctx).pop();
             },
             child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAddMessDialog() {
+    final nameCtrl = TextEditingController();
+    final fssaiCtrl = TextEditingController();
+    final cityCtrl = TextEditingController(text: 'Pune');
+    final localityCtrl = TextEditingController(text: 'Karve Nagar');
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Register New Mess (Admin Control)'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameCtrl,
+                decoration: const InputDecoration(labelText: 'Mess Name'),
+              ),
+              TextField(
+                controller: fssaiCtrl,
+                decoration: const InputDecoration(
+                    labelText: '14-Digit FSSAI License Number'),
+                keyboardType: TextInputType.number,
+              ),
+              TextField(
+                controller: cityCtrl,
+                decoration: const InputDecoration(labelText: 'City'),
+              ),
+              TextField(
+                controller: localityCtrl,
+                decoration: const InputDecoration(labelText: 'Locality'),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (nameCtrl.text.isNotEmpty && fssaiCtrl.text.length == 14) {
+                setState(() {
+                  _platformMesses.add(Mess(
+                    id: 'mess_${DateTime.now().millisecondsSinceEpoch}',
+                    name: nameCtrl.text,
+                    fssai: fssaiCtrl.text,
+                    fssaiVerified: true,
+                    city: cityCtrl.text,
+                    locality: localityCtrl.text,
+                    dietary: 'PURE_VEG',
+                    rating: 5.0,
+                    pricePerMonth: 3200,
+                    skipCreditPerMeal: 50,
+                    phone: '+91 98000 00000',
+                  ));
+                });
+                Navigator.of(ctx).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('✅ New Mess registered & FSSAI verified!')),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      content: Text('⚠️ Please enter valid name and 14-digit FSSAI number.')),
+                );
+              }
+            },
+            child: const Text('Register & Verify'),
           ),
         ],
       ),

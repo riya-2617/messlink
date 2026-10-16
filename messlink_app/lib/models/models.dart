@@ -1,17 +1,42 @@
-// MessLink Domain Models
+// MessLink Domain Models & RBAC Roles
+
+enum UserRole { admin, messOwner, diner }
+
+enum DinerPersona { student, working, senior }
+
+class AppUser {
+  final String id;
+  final String name;
+  final String email;
+  final String phone;
+  final UserRole role;
+  final String? messId; // Associated mess ID for messOwner
+  DinerPersona dinerPersona; // Dynamic profile persona for diner
+
+  AppUser({
+    required this.id,
+    required this.name,
+    required this.email,
+    required this.phone,
+    required this.role,
+    this.messId,
+    this.dinerPersona = DinerPersona.student,
+  });
+}
 
 class Mess {
   final String id;
-  final String name;
-  final String fssai;
-  final bool fssaiVerified;
-  final String city;
-  final String locality;
-  final String dietary;
-  final double rating;
-  final int pricePerMonth;
-  final int skipCreditPerMeal;
-  final String phone;
+  String name;
+  String fssai;
+  bool fssaiVerified;
+  String city;
+  String locality;
+  String dietary;
+  double rating;
+  int pricePerMonth;
+  int skipCreditPerMeal;
+  String phone;
+  bool isActive;
 
   Mess({
     required this.id,
@@ -25,6 +50,7 @@ class Mess {
     required this.pricePerMonth,
     required this.skipCreditPerMeal,
     required this.phone,
+    this.isActive = true,
   });
 
   factory Mess.fromJson(Map<String, dynamic> json) {
@@ -40,15 +66,16 @@ class Mess {
       pricePerMonth: json['pricePerMonth'] ?? 3200,
       skipCreditPerMeal: json['skipCreditPerMeal'] ?? 50,
       phone: json['phone'] ?? '+91 98220 12345',
+      isActive: json['isActive'] ?? true,
     );
   }
 }
 
 class DishItem {
-  final String category;
-  final String en;
-  final String mr;
-  final String hi;
+  String category;
+  String en;
+  String mr;
+  String hi;
   double confidence;
 
   DishItem({

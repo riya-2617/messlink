@@ -1,5 +1,5 @@
 // MessLink Trilingual Localization Strings (English, Marathi, Hindi)
-// 100% complete parity with website localization dictionary
+// Full RBAC & Persona strings support
 
 class AppStrings {
   static const Map<String, Map<String, String>> localizedValues = {
@@ -18,8 +18,14 @@ class AppStrings {
       'manage_desc':
           'Predict today\'s exact headcount, reduce kitchen food wastage by 30%, scan daily menus with AI, and automate dues.',
       'manage_cta': 'Open Owner Portal →',
-      'featured_mess_title': '📍 Featured Active Mess: Annapurna Bhojanalaya (अन्नपूर्णा भोजनालय)',
-      'featured_mess_subtitle': 'Karve Nagar, Pune • Pure Veg • ⭐ 4.8 (342 reviews) • ✓ FSSAI Lic: 11522036000123',
+      'admin_title': 'Platform Admin',
+      'admin_desc':
+          'Register new messes, verify 14-digit FSSAI licenses, monitor hygiene scores, and review platform ledger.',
+      'admin_cta': 'Open Admin Console →',
+      'featured_mess_title':
+          '📍 Featured Active Mess: Annapurna Bhojanalaya (अन्नपूर्णा भोजनालय)',
+      'featured_mess_subtitle':
+          'Karve Nagar, Pune • Pure Veg • ⭐ 4.8 (342 reviews) • ✓ FSSAI Lic: 11522036000123',
       'view_menu_cta': 'View Today\'s Menu',
       'today_menu': 'Today\'s Verified Menu',
       'lunch': 'Lunch',
@@ -50,9 +56,9 @@ class AppStrings {
       'amount': 'Amount',
       'balance': 'Balance',
       'back_home': '← Back to Home',
-      'student_mode': '🎓 Student Mode (Dark)',
+      'student_mode': '🎓 Student (Dark)',
       'working_mode': '💼 Working Adult (Light)',
-      'senior_mode': '👓 Senior Citizen (High-Contrast)',
+      'senior_mode': '👓 Senior (High-Contrast)',
       'policy_dpdpa_title': 'DPDPA 2023 & Indian Compliance',
       'footer_text':
           'MessLink Technologies India Pvt. Ltd. | Compliant with DPDPA 2023, FSSAI Act 2006, and IT Act 2000.',
@@ -66,6 +72,16 @@ class AppStrings {
       'review_spelling': '⚠️ Review Spelling',
       'confident_badge': '✓ 98% Confident',
       'edit_dish': 'Edit',
+      'role_admin': '🛡️ Platform Admin',
+      'role_owner': '👨‍🍳 Mess Owner',
+      'role_diner': '🍛 Diner / Subscriber',
+      'admin_dashboard': 'Platform Admin Console',
+      'admin_subtitle': 'Verify FSSAI, Register Messes & Review Platform Integrity',
+      'register_mess_btn': '+ Register New Mess',
+      'registered_messes': 'Registered Messes on Platform',
+      'verify_fssai': 'Verify FSSAI',
+      'fssai_verified_status': '✓ Verified',
+      'fssai_pending_status': '⏳ Pending Verification',
     },
     'mr': {
       'app_title': 'मेसलिंक',
@@ -82,8 +98,13 @@ class AppStrings {
       'manage_desc':
           'आज जेवणाऱ्यांची अचूक संख्या जाणून घ्या, अन्न वाया जाणे ३०% रोखा, एआय द्वारे मेनू स्कॅन करा आणि हिशोब ठेवा.',
       'manage_cta': 'मालक पोर्टल उघडा →',
+      'admin_title': 'प्लॅटफॉर्म ॲडमिन',
+      'admin_desc':
+          'नवीन मेसची नोंदणी करा, १४-अंकी FSSAI परवाना तपासा आणि तक्रारींचे निवारण करा.',
+      'admin_cta': 'ॲडमिन कन्सोल उघडा →',
       'featured_mess_title': '📍 लोकप्रिय मेस: अन्नपूर्णा भोजनालय',
-      'featured_mess_subtitle': 'कर्वे नगर, पुणे • शुद्ध शाकाहारी • ⭐ ४.८ (३४२ परीक्षणे) • ✓ FSSAI परवाना: 11522036000123',
+      'featured_mess_subtitle':
+          'कर्वे नगर, पुणे • शुद्ध शाकाहारी • ⭐ ४.८ (३४२ परीक्षणे) • ✓ FSSAI परवाना: 11522036000123',
       'view_menu_cta': 'आजचा मेनू पहा',
       'today_menu': 'आजचा अधिकृत मेनू',
       'lunch': 'दुपारचे जेवण',
@@ -114,9 +135,9 @@ class AppStrings {
       'amount': 'रक्कम',
       'balance': 'शिल्लक',
       'back_home': '← मुख्य पृष्ठावर जा',
-      'student_mode': '🎓 विद्यार्थी मोड (डार्क)',
-      'working_mode': '💼 नोकरदार मोड (लाईट)',
-      'senior_mode': '👓 ज्येष्ठ नागरिक मोड (हाय-कॉन्ट्रास्ट)',
+      'student_mode': '🎓 विद्यार्थी (डार्क)',
+      'working_mode': '💼 नोकरदार (लाईट)',
+      'senior_mode': '👓 ज्येष्ठ नागरिक (हाय-कॉन्ट्रास्ट)',
       'policy_dpdpa_title': 'DPDPA २०२३ आणि कायदेशीर माहिती',
       'footer_text':
           'मेसलिंक टेक्नॉलॉजीज इंडिया प्रा. लि. | DPDPA २०२३, FSSAI कायदा २००६ आणि IT कायदा २००० चे पालनकर्ते.',
@@ -130,6 +151,16 @@ class AppStrings {
       'review_spelling': '⚠️ शब्द तपासा',
       'confident_badge': '✓ ९८% खात्रीशीर',
       'edit_dish': 'बदला',
+      'role_admin': '🛡️ प्लॅटफॉर्म ॲडमिन',
+      'role_owner': '👨‍🍳 मेस मालक',
+      'role_diner': '🍛 जेवणारा / सदस्य',
+      'admin_dashboard': 'प्लॅटफॉर्म ॲडमिन कन्सोल',
+      'admin_subtitle': 'FSSAI पडताळणी, मेस नोंदणी आणि प्लॅटफॉर्म तपासणी',
+      'register_mess_btn': '+ नवीन मेस नोंदवा',
+      'registered_messes': 'नोंदणीकृत मेस यादी',
+      'verify_fssai': 'FSSAI तपासा',
+      'fssai_verified_status': '✓ तपासले',
+      'fssai_pending_status': '⏳ पडताळणी प्रलंबित',
     },
     'hi': {
       'app_title': 'मेसलिंक',
@@ -146,8 +177,13 @@ class AppStrings {
       'manage_desc':
           'आज की सही संख्या जानें, भोजन की बर्बादी ३०% कम करें, एआई द्वारा मेनू स्कैन करें और हिसाब रखें।',
       'manage_cta': 'ओनर पोर्टल खोलें →',
+      'admin_title': 'प्लेटफ़ॉर्म एडमिन',
+      'admin_desc':
+          'नई मेस पंजीकृत करें, १४-अंकीय FSSAI लाइसेंस सत्यापित करें और रिपोर्ट देखें।',
+      'admin_cta': 'एडमिन कंसोल खोलें →',
       'featured_mess_title': '📍 लोकप्रिय मेस: अन्नपूर्णा भोजनालय',
-      'featured_mess_subtitle': 'कर्वे नगर, पुणे • शुद्ध शाकाहारी • ⭐ 4.8 (342 समीक्षाएं) • ✓ FSSAI लाइसेंस: 11522036000123',
+      'featured_mess_subtitle':
+          'कर्वे नगर, पुणे • शुद्ध शाकाहारी • ⭐ 4.8 (342 समीक्षाएं) • ✓ FSSAI लाइसेंस: 11522036000123',
       'view_menu_cta': 'आज का मेनू देखें',
       'today_menu': 'आज का सत्यापित मेनू',
       'lunch': 'दोपहर का भोजन',
@@ -178,9 +214,9 @@ class AppStrings {
       'amount': 'राशि',
       'balance': 'बैलेंस',
       'back_home': '← मुख्य पृष्ठ पर लौटें',
-      'student_mode': '🎓 छात्र मोड (डार्क)',
-      'working_mode': '💼 कामकाजी मोड (लाइट)',
-      'senior_mode': '👓 वरिष्ठ नागरिक मोड (हाई-कंट्रास्ट)',
+      'student_mode': '🎓 छात्र (डार्क)',
+      'working_mode': '💼 कामकाजी (लाइट)',
+      'senior_mode': '👓 वरिष्ठ नागरिक (हाई-कंट्रास्ट)',
       'policy_dpdpa_title': 'DPDPA 2023 एवं भारतीय अनुपालन',
       'footer_text':
           'मेसलिंक टेक्नोलॉजीज इंडिया प्रा. लि. | DPDPA 2023, FSSAI 2006 एवं IT अधिनियम 2000 के अनुरूप।',
@@ -194,6 +230,16 @@ class AppStrings {
       'review_spelling': '⚠️ वर्तनी जांचें',
       'confident_badge': '✓ 98% आश्वस्त',
       'edit_dish': 'संपादित करें',
+      'role_admin': '🛡️ प्लेटफ़ॉर्म एडमिन',
+      'role_owner': '👨‍🍳 मेस ओनर',
+      'role_diner': '🍛 डाइनर / सदस्य',
+      'admin_dashboard': 'प्लेटफ़ॉर्म एडमिन कंसोल',
+      'admin_subtitle': 'FSSAI सत्यापन, मेस पंजीकरण और प्लेटफ़ॉर्म ऑडिट',
+      'register_mess_btn': '+ नई मेस पंजीकृत करें',
+      'registered_messes': 'पंजीकृत मेस सूची',
+      'verify_fssai': 'FSSAI सत्यापित करें',
+      'fssai_verified_status': '✓ सत्यापित',
+      'fssai_pending_status': '⏳ सत्यापन लंबित',
     },
   };
 
