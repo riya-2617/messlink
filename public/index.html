@@ -12,7 +12,7 @@
 
   <!-- Connectivity Status Banner -->
   <div id="network-banner" class="network-banner">
-    ⚠️ Offline Mode: Changes are safely stored in queue and will sync automatically.
+    <span class="icon" style="font-size: 1rem; margin-right: 4px;">cloud_off</span> Offline Mode: Changes are safely stored in queue and will sync automatically.
   </div>
 
   <!-- Main Navigation Bar -->
@@ -35,27 +35,27 @@
     <!-- Quick Navigation Links -->
     <nav class="nav-links">
       <button id="nav-btn-landing" class="nav-link-btn active" onclick="navigateTo('LANDING')">
-        🏠 <span data-i18n="nav_explore">Explore</span>
+        <span class="icon" style="font-size: 1.1rem; margin-right: 4px;">explore</span><span data-i18n="nav_explore">Explore</span>
       </button>
       <button id="nav-btn-diner" class="nav-link-btn" onclick="navigateTo('DINER')">
-        🍛 <span data-i18n="nav_diner">My Pass (Diner)</span>
+        <span class="icon" style="font-size: 1.1rem; margin-right: 4px;">badge</span><span data-i18n="nav_diner">My Pass (Diner)</span>
       </button>
       <button id="nav-btn-owner" class="nav-link-btn" onclick="navigateTo('OWNER')">
-        👨‍🍳 <span data-i18n="nav_owner">Owner Cockpit</span>
+        <span class="icon" style="font-size: 1.1rem; margin-right: 4px;">storefront</span><span data-i18n="nav_owner">Owner Cockpit</span>
       </button>
     </nav>
 
     <!-- Right Controls: City, Persona, Language -->
     <div class="nav-controls">
       <div class="city-pill">
-        📍 <span>Pune (Karve Nagar)</span>
+        <span class="icon" style="font-size: 1rem; margin-right: 4px;">location_on</span><span>Pune (Karve Nagar)</span>
       </div>
 
       <!-- Persona Switcher -->
       <select id="persona-select" class="select-control" aria-label="Presentation Persona">
-        <option value="STUDENT" selected>🎓 Student Mode</option>
-        <option value="WORKING">💼 Working Pro</option>
-        <option value="SENIOR">👓 Senior Citizen</option>
+        <option value="STUDENT" selected>Student Mode</option>
+        <option value="WORKING">Working Pro</option>
+        <option value="SENIOR">Senior Citizen</option>
       </select>
 
       <!-- Language Selector -->
@@ -81,7 +81,7 @@
         <div class="hero-left">
           <div class="hero-pill-badge">
             <span class="hero-pill-pulse"></span>
-            <span data-i18n="landing_badge">🍽️ India's #1 Mess Subscription Network</span>
+            <span data-i18n="landing_badge">India's #1 Mess Subscription Network</span>
           </div>
 
           <h2 class="hero-headline">
@@ -94,17 +94,17 @@
 
           <!-- Interactive Search Bar -->
           <div class="search-bar-wrapper">
-            <span>🔍</span>
+            <span class="icon" style="color: var(--text-secondary); margin-left: 6px;">search</span>
             <input type="text" id="mess-search-input" class="search-input" placeholder="Search messes near COEP, Ferguson, Karve Nagar, Allen Kota..." oninput="handleSearchMess(this.value)">
             <button class="btn btn-primary" onclick="navigateTo('DINER')">Find Mess</button>
           </div>
 
           <!-- Quick Filter Chips -->
           <div class="filter-chips-row">
-            <span class="filter-chip active">🟢 Pure Veg Only</span>
-            <span class="filter-chip">🥞 Unlimited Chapati</span>
-            <span class="filter-chip">⭐ 4.5+ Rating</span>
-            <span class="filter-chip">⚡ Under ₹60/Meal</span>
+            <span class="filter-chip active"><span class="icon" style="font-size: 0.9rem; color: var(--veg-green); margin-right: 4px;">eco</span> Pure Veg Only</span>
+            <span class="filter-chip"><span class="icon" style="font-size: 0.9rem; margin-right: 4px;">all_inclusive</span> Unlimited Chapati</span>
+            <span class="filter-chip"><span class="icon" style="font-size: 0.9rem; color: #ffaa00; margin-right: 4px;">star</span> 4.5+ Rating</span>
+            <span class="filter-chip"><span class="icon" style="font-size: 0.9rem; margin-right: 4px;">bolt</span> Under ₹60/Meal</span>
           </div>
 
           <!-- Hero Metrics Social Proof -->
@@ -157,30 +157,30 @@
         <div class="dual-cards-grid">
           <!-- Option A: Diner Hub -->
           <div class="journey-card diner-path" onclick="navigateTo('DINER')">
-            <div class="journey-icon-box">🍛</div>
+            <div class="journey-icon-box"><span class="icon" style="font-size: 2.2rem; color: var(--primary);">restaurant</span></div>
             <h3 data-i18n="eat_title">Eat at a Mess</h3>
             <p data-i18n="eat_desc">
               Discover verified messes in Pune & Kota. View today's menu, skip meals in 1-click before cutoff, and track your wallet credits.
             </p>
             <ul class="journey-features-list">
-              <li>✨ <strong>1-Click Meal Skip</strong> — Get ₹50 back instantly</li>
-              <li>🛡️ <strong>100% FSSAI Verified</strong> — Strict hygiene checks</li>
-              <li>📱 <strong>Digital Pass</strong> — Contactless QR entry check-in</li>
+              <li><span class="icon" style="font-size:1.05rem; color: var(--accent-gold); margin-right: 6px;">bolt</span> <strong>1-Click Meal Skip</strong> — Get ₹50 back instantly</li>
+              <li><span class="icon" style="font-size:1.05rem; color: var(--veg-green); margin-right: 6px;">verified_user</span> <strong>100% FSSAI Verified</strong> — Strict hygiene checks</li>
+              <li><span class="icon" style="font-size:1.05rem; color: var(--primary); margin-right: 6px;">qr_code_2</span> <strong>Digital Pass</strong> — Contactless QR entry check-in</li>
             </ul>
             <button class="btn btn-primary" data-i18n="eat_cta">Explore Diners' Hub →</button>
           </div>
 
           <!-- Option B: Mess Owner Operations -->
           <div class="journey-card owner-path" onclick="navigateTo('OWNER')">
-            <div class="journey-icon-box">👨‍🍳</div>
+            <div class="journey-icon-box"><span class="icon" style="font-size: 2.2rem; color: var(--primary);">storefront</span></div>
             <h3 data-i18n="manage_title">Manage a Mess</h3>
             <p data-i18n="manage_desc">
               Predict today's exact headcount, reduce kitchen food wastage by 30%, scan daily chalkboard menus with AI, and automate dues.
             </p>
             <ul class="journey-features-list">
-              <li>📉 <strong>Stop Food Wastage</strong> — Know exact attendance at 5 PM</li>
-              <li>📸 <strong>AI Blackboard OCR</strong> — Scan chalkboard in Marathi/Hindi</li>
-              <li>⚖️ <strong>Double-Entry Ledger</strong> — Transparent payment accounting</li>
+              <li><span class="icon" style="font-size:1.05rem; color: var(--veg-green); margin-right: 6px;">trending_down</span> <strong>Stop Food Wastage</strong> — Know exact attendance at 5 PM</li>
+              <li><span class="icon" style="font-size:1.05rem; color: var(--primary); margin-right: 6px;">photo_camera</span> <strong>AI Blackboard OCR</strong> — Scan chalkboard in Marathi/Hindi</li>
+              <li><span class="icon" style="font-size:1.05rem; color: var(--accent-gold); margin-right: 6px;">account_balance</span> <strong>Double-Entry Ledger</strong> — Transparent payment accounting</li>
             </ul>
             <button class="btn btn-secondary" data-i18n="manage_cta">Open Owner Portal →</button>
           </div>
@@ -202,12 +202,12 @@
           <div class="mess-card">
             <div class="mess-card-banner">
               <span class="badge badge-veg">FSSAI Lic: 11522036000123</span>
-              <span style="font-size: 0.82rem; font-weight: 700; color: #ffaa00;">⭐ 4.8 (342)</span>
+              <span style="font-size: 0.82rem; font-weight: 700; color: #ffaa00; display: inline-flex; align-items: center;"><span class="icon" style="font-size: 0.95rem; margin-right: 2px;">star</span> 4.8 (342)</span>
             </div>
             <div class="mess-card-body">
               <h4 class="mess-name-header">Annapurna Bhojanalaya (अन्नपूर्णा)</h4>
               <div class="mess-location-meta">
-                📍 Karve Nagar, Pune • 400m from Cummins / COEP Hostel
+                <span class="icon" style="font-size: 0.95rem; margin-right: 2px;">location_on</span> Karve Nagar, Pune • 400m from Cummins / COEP Hostel
               </div>
               <div class="mess-pricing-box">
                 <div>
@@ -229,12 +229,12 @@
           <div class="mess-card">
             <div class="mess-card-banner">
               <span class="badge badge-veg">FSSAI Lic: 12221015000456</span>
-              <span style="font-size: 0.82rem; font-weight: 700; color: #ffaa00;">⭐ 4.7 (512)</span>
+              <span style="font-size: 0.82rem; font-weight: 700; color: #ffaa00; display: inline-flex; align-items: center;"><span class="icon" style="font-size: 0.95rem; margin-right: 2px;">star</span> 4.7 (512)</span>
             </div>
             <div class="mess-card-body">
               <h4 class="mess-name-header">Radhe Krishna Mess (राधे कृष्णा)</h4>
               <div class="mess-location-meta">
-                📍 Rajiv Gandhi Nagar, Kota • 250m from Allen Supath
+                <span class="icon" style="font-size: 0.95rem; margin-right: 2px;">location_on</span> Rajiv Gandhi Nagar, Kota • 250m from Allen Supath
               </div>
               <div class="mess-pricing-box">
                 <div>
@@ -256,12 +256,12 @@
           <div class="mess-card">
             <div class="mess-card-banner">
               <span class="badge badge-veg">FSSAI Lic: 11523048000789</span>
-              <span style="font-size: 0.82rem; font-weight: 700; color: #ffaa00;">⭐ 4.9 (618)</span>
+              <span style="font-size: 0.82rem; font-weight: 700; color: #ffaa00; display: inline-flex; align-items: center;"><span class="icon" style="font-size: 0.95rem; margin-right: 2px;">star</span> 4.9 (618)</span>
             </div>
             <div class="mess-card-body">
               <h4 class="mess-name-header">Gurukrupa Dining Hall (गुरुकृपा)</h4>
               <div class="mess-location-meta">
-                📍 FC Road, Pune • Near Fergusson College Gate
+                <span class="icon" style="font-size: 0.95rem; margin-right: 2px;">location_on</span> FC Road, Pune • Near Fergusson College Gate
               </div>
               <div class="mess-pricing-box">
                 <div>
@@ -288,22 +288,22 @@
         </h3>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
           <div style="text-align: center;">
-            <div style="font-size: 2rem; margin-bottom: 8px;">📱</div>
+            <div style="margin-bottom: 8px;"><span class="icon" style="font-size: 2.2rem; color: var(--primary);">restaurant_menu</span></div>
             <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 4px;">1. Check Daily Menu</h4>
             <p style="font-size: 0.82rem; color: var(--text-secondary);">See verified dinner items published at 4 PM by your mess owner.</p>
           </div>
           <div style="text-align: center;">
-            <div style="font-size: 2rem; margin-bottom: 8px;">⚡</div>
+            <div style="margin-bottom: 8px;"><span class="icon" style="font-size: 2.2rem; color: var(--accent-gold);">bolt</span></div>
             <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 4px;">2. 1-Tap Meal Skip</h4>
             <p style="font-size: 0.82rem; color: var(--text-secondary);">Eating out with friends or staying late? Tap skip before 5 PM cutoff.</p>
           </div>
           <div style="text-align: center;">
-            <div style="font-size: 2rem; margin-bottom: 8px;">👨‍🍳</div>
+            <div style="margin-bottom: 8px;"><span class="icon" style="font-size: 2.2rem; color: var(--primary);">kitchen</span></div>
             <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 4px;">3. Kitchen Syncs</h4>
             <p style="font-size: 0.82rem; color: var(--text-secondary);">Kitchen head count updates instantly. Cooks exact portions without waste.</p>
           </div>
           <div style="text-align: center;">
-            <div style="font-size: 2rem; margin-bottom: 8px;">💰</div>
+            <div style="margin-bottom: 8px;"><span class="icon" style="font-size: 2.2rem; color: var(--veg-green);">account_balance_wallet</span></div>
             <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 4px;">4. Instant ₹50 Credit</h4>
             <p style="font-size: 0.82rem; color: var(--text-secondary);">₹50 credited to your wallet, auto-deducted on your next monthly renewal!</p>
           </div>
@@ -318,7 +318,7 @@
     <section id="view-diner" class="view-section">
       <div class="diner-header-bar">
         <div class="diner-greeting">
-          <h2>Namaste, <span id="diner-user-name">Rohan Patil</span> 🙏</h2>
+          <h2>Namaste, <span id="diner-user-name">Rohan Patil</span></h2>
           <p>Annapurna Bhojanalaya • Monthly 2-Meal Plan (Lunch + Dinner)</p>
         </div>
         <button class="btn btn-outline" onclick="navigateTo('LANDING')">← Back to Explore</button>
@@ -378,7 +378,7 @@
         <div class="metric-widget">
           <div class="metric-widget-header">
             <span class="metric-label" data-i18n="meals_remaining">Remaining Meals</span>
-            <div class="metric-icon-small" style="background: var(--primary-soft); color: var(--primary);">🍱</div>
+            <div class="metric-icon-small" style="background: var(--primary-soft); color: var(--primary);"><span class="icon" style="font-size: 1.1rem;">restaurant</span></div>
           </div>
           <div class="metric-num-display primary-accent" id="diner-meals-left">42 / 60</div>
           <div class="metric-progress-track">
@@ -391,20 +391,20 @@
         <div class="metric-widget">
           <div class="metric-widget-header">
             <span class="metric-label" data-i18n="credits_balance">Wallet Credits Balance</span>
-            <div class="metric-icon-small" style="background: var(--veg-green-soft); color: var(--veg-green);">₹</div>
+            <div class="metric-icon-small" style="background: var(--veg-green-soft); color: var(--veg-green); font-weight: 700;">₹</div>
           </div>
           <div class="metric-num-display green-accent" id="diner-credits-balance">₹100</div>
           <div class="metric-progress-track">
             <div class="metric-progress-bar green-bar" style="width: 40%;"></div>
           </div>
-          <small style="font-size: 0.74rem; color: var(--veg-green); margin-top: 6px; display: block;">✓ Auto-deducted on renewal</small>
+          <small style="font-size: 0.74rem; color: var(--veg-green); margin-top: 6px; display: flex; align-items: center;"><span class="icon" style="font-size: 0.85rem; margin-right: 3px;">check_circle</span> Auto-deducted on renewal</small>
         </div>
 
         <!-- Metric 3: Skips Used -->
         <div class="metric-widget">
           <div class="metric-widget-header">
             <span class="metric-label" data-i18n="skips_left">Monthly Skips Used</span>
-            <div class="metric-icon-small" style="background: var(--accent-gold-soft); color: var(--accent-gold);">⚡</div>
+            <div class="metric-icon-small" style="background: var(--accent-gold-soft); color: var(--accent-gold);"><span class="icon" style="font-size: 1.1rem;">history_toggle_off</span></div>
           </div>
           <div class="metric-num-display" id="diner-skips-used">2 / 6</div>
           <div class="metric-progress-track">
@@ -420,7 +420,7 @@
       <!-- Cutoff Countdown & Meal Skip Command Module -->
       <div class="skip-command-widget">
         <div class="cutoff-timer-pane">
-          <div class="timer-icon-circle">⏰</div>
+          <div class="timer-icon-circle"><span class="icon" style="font-size: 1.3rem;">schedule</span></div>
           <div class="cutoff-timer-text">
             <h4>
               <span data-i18n="cutoff_dinner_alert">Dinner Skip Cutoff: 05:00 PM IST</span>
@@ -431,7 +431,7 @@
         </div>
 
         <button id="skip-meal-btn" class="btn btn-skip" onclick="handleSkipMeal()" data-i18n="skip_action">
-          ⚡ Skip Tonight's Dinner & Save ₹50
+          <span class="icon" style="font-size: 1.1rem; margin-right: 6px;">bolt</span> Skip Tonight's Dinner & Save ₹50
         </button>
       </div>
 
@@ -449,8 +449,8 @@
 
         <!-- Menu Tabs: Lunch vs Dinner -->
         <div style="padding: 16px 24px 0; display: flex; gap: 10px; border-bottom: 1px solid var(--border-subtle);">
-          <button id="menu-tab-dinner" class="filter-chip active" onclick="switchMenuMeal('dinner')">🌙 Dinner Menu (Tonight)</button>
-          <button id="menu-tab-lunch" class="filter-chip" onclick="switchMenuMeal('lunch')">☀️ Lunch Menu (Earlier Today)</button>
+          <button id="menu-tab-dinner" class="filter-chip active" onclick="switchMenuMeal('dinner')"><span class="icon" style="font-size: 0.9rem; margin-right: 4px;">bedtime</span> Dinner Menu (Tonight)</button>
+          <button id="menu-tab-lunch" class="filter-chip" onclick="switchMenuMeal('lunch')"><span class="icon" style="font-size: 0.9rem; margin-right: 4px;">wb_sunny</span> Lunch Menu (Earlier Today)</button>
         </div>
 
         <div class="menu-items-table" id="diner-menu-items">
@@ -509,7 +509,7 @@
             <h3>Tonight's Kitchen Batch Preparation Targets</h3>
             <p style="color: var(--text-secondary); font-size: 0.85rem;">Automatically scaled for 87 confirmed diners (13 skips deducted)</p>
           </div>
-          <span class="badge badge-saffron">⚡ Kitchen AI Recipe Scaling</span>
+          <span class="badge badge-saffron"><span class="icon" style="font-size: 0.85rem; margin-right: 4px;">psychology</span> Kitchen AI Recipe Scaling</span>
         </div>
 
         <div class="batch-ingredients-grid">
@@ -548,7 +548,7 @@
         </div>
 
         <button id="ocr-scan-btn" class="btn btn-primary" onclick="simulateOCRScan()" data-i18n="simulate_scan_btn">
-          📸 Scan Blackboard Menu Photo
+          <span class="icon" style="font-size: 1.1rem; margin-right: 6px;">photo_camera</span> Scan Blackboard Menu Photo
         </button>
 
         <!-- Extracted OCR Preview Box -->
@@ -561,7 +561,7 @@
           <div id="ocr-items-list" style="margin-bottom: 18px;"></div>
 
           <button id="ocr-publish-btn" class="btn btn-secondary" onclick="publishScannedMenu()" data-i18n="review_publish_btn">
-            ✓ Confirm & Broadcast to 87 Subscribers
+            <span class="icon" style="font-size: 1rem; margin-right: 4px;">send</span> Confirm & Broadcast to 87 Subscribers
           </button>
         </div>
       </div>
@@ -574,7 +574,7 @@
             <p style="font-size: 0.82rem; color: var(--text-secondary);">Real-time financial audits with zero debit/credit discrepancy</p>
           </div>
           <button class="btn btn-outline" style="font-size: 0.82rem; padding: 6px 14px;" onclick="alert('Exporting verified double-entry CSV report...')">
-            📥 Export CSV
+            <span class="icon" style="font-size: 0.95rem; margin-right: 4px;">download</span> Export CSV
           </button>
         </div>
 
@@ -605,7 +605,7 @@
         <h3 style="font-family: var(--font-display); font-size: 1.3rem; font-weight: 800;" data-i18n="policy_dpdpa_title">
           DPDPA 2023 & Indian Statutory Compliance
         </h3>
-        <button onclick="closeModal('dpdpa-modal')" style="background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer;">✕</button>
+        <button onclick="closeModal('dpdpa-modal')" style="background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer;"><span class="icon">close</span></button>
       </div>
 
       <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 14px;">

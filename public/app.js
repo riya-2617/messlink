@@ -8,7 +8,7 @@ const I18N = {
     nav_explore: "Explore",
     nav_diner: "My Pass (Diner)",
     nav_owner: "Owner Cockpit",
-    landing_badge: "🍽️ India's #1 Mess Subscription Network",
+    landing_badge: "India's #1 Mess Subscription Network",
     landing_heading: "Are you here to Eat or Manage a Mess?",
     landing_subheading: "Connecting students and working professionals with nutritious, verified local messes. Skip meals before cutoff in 1-tap, avoid food waste, and get instant ₹50 ledger credits back.",
     eat_title: "Eat at a Mess",
@@ -20,7 +20,7 @@ const I18N = {
     today_menu: "Today's Verified Menu",
     lunch: "Lunch",
     dinner: "Dinner",
-    skip_action: "⚡ Skip Tonight's Dinner & Save ₹50",
+    skip_action: "Skip Tonight's Dinner & Save ₹50",
     skips_left: "Monthly Skips Used",
     credits_balance: "Wallet Credits Balance",
     meals_remaining: "Remaining Meals",
@@ -31,8 +31,8 @@ const I18N = {
     headcount_forecast: "Today's Headcount Forecast",
     scan_menu_title: "AI Menu Photo Scanner (Devanagari OCR)",
     scan_menu_desc: "Snap a photo of your daily chalkboard or whiteboard menu in Marathi, Hindi, or English. MessLink AI digitizes it for all subscribers.",
-    simulate_scan_btn: "📸 Scan Blackboard Menu Photo",
-    review_publish_btn: "✓ Confirm & Broadcast to 87 Subscribers",
+    simulate_scan_btn: "Scan Blackboard Menu Photo",
+    review_publish_btn: "Confirm & Broadcast to 87 Subscribers",
     ledger_title: "Transaction Ledger (Double-Entry)",
     date: "Date & Time",
     type: "Transaction Type",
@@ -47,7 +47,7 @@ const I18N = {
     nav_explore: "शोधा",
     nav_diner: "माझे पास (जेवणारे)",
     nav_owner: "मालक कॉकपिट",
-    landing_badge: "🍽️ भारतातील विश्वासू मेस नेटवर्क",
+    landing_badge: "भारतातील विश्वासू मेस नेटवर्क",
     landing_heading: "तुम्ही जेवण्यासाठी आला आहात की मेस चालवण्यासाठी?",
     landing_subheading: "विद्यार्थी आणि नोकरदारांना घरगुती आणि सकस मेसशी जोडणारे व्यासपीठ. वेळेत जेवण रद्द करा, अन्न वाया जाणे टाळा आणि पैसे वाचवा.",
     eat_title: "मेसमध्ये जेवा",
@@ -59,7 +59,7 @@ const I18N = {
     today_menu: "आजचा अधिकृत मेनू",
     lunch: "दुपारचे जेवण",
     dinner: "रात्रीचे जेवण",
-    skip_action: "⚡ रात्रीचे जेवण रद्द करा आणि ₹५० वाचवा",
+    skip_action: "रात्रीचे जेवण रद्द करा आणि ₹५० वाचवा",
     skips_left: "वापरलेले जेवण रद्दीकरण",
     credits_balance: "शिल्लक वॉलेट क्रेडिट",
     meals_remaining: "शिल्लक जेवण",
@@ -70,8 +70,8 @@ const I18N = {
     headcount_forecast: "आजच्या जेवणाचा अंदाज (हेडकाउंट)",
     scan_menu_title: "एआय मेनू फोटो स्कॅनर (मराठी/देवनागरी OCR)",
     scan_menu_desc: "तुमच्या ब्लॅकबोर्ड किंवा व्हाईटबोर्डवरील मराठी, हिंदी किंवा इंग्रजी मेनूचा फोटो काढा.",
-    simulate_scan_btn: "📸 फळ्यावरील मेनूचा फोटो स्कॅन करा",
-    review_publish_btn: "✓ तपासा आणि ८७ ग्राहकांसाठी प्रसिद्ध करा",
+    simulate_scan_btn: "फळ्यावरील मेनूचा फोटो स्कॅन करा",
+    review_publish_btn: "तपासा आणि ८७ ग्राहकांसाठी प्रसिद्ध करा",
     ledger_title: "आर्थिक व्यवहार वही (Double-Entry Ledger)",
     date: "दिनांक आणि वेळ",
     type: "व्यवहार प्रकार",
@@ -86,7 +86,7 @@ const I18N = {
     nav_explore: "खोजें",
     nav_diner: "मेरा पास (डाइनर)",
     nav_owner: "ओनर कॉकपिट",
-    landing_badge: "🍽️ भारत का अग्रणी मेस सदस्यता नेटवर्क",
+    landing_badge: "भारत का अग्रणी मेस सदस्यता नेटवर्क",
     landing_heading: "आप यहाँ भोजन करने आए हैं या मेस का प्रबंधन करने?",
     landing_subheading: "छात्रों और कामकाजी पेशेवरों को पौष्टिक स्थानीय मेस से जोड़ना। कटऑफ से पहले भोजन स्किप करें, अन्न की बर्बादी रोकें और बचत करें।",
     eat_title: "मेस में भोजन करें",
@@ -98,7 +98,7 @@ const I18N = {
     today_menu: "आज का सत्यापित मेनू",
     lunch: "दोपहर का भोजन",
     dinner: "रात का भोजन",
-    skip_action: "⚡ रात का भोजन छोड़ें और ₹50 बचाएं",
+    skip_action: "रात का भोजन छोड़ें और ₹50 बचाएं",
     skips_left: "महीने में किए गए स्किप",
     credits_balance: "वॉलेट क्रेडिट बैलेंस",
     meals_remaining: "शेष भोजन संख्या",
@@ -109,8 +109,8 @@ const I18N = {
     headcount_forecast: "आज का हेडकाउंट पूर्वानुमान",
     scan_menu_title: "एआई मेनू फोटो स्कैनर (देवनागरी OCR)",
     scan_menu_desc: "अपने ब्लैकबोर्ड या व्हाइटबोर्ड के मेनू की फोटो लें (मराठी, हिंदी या अंग्रेजी)।",
-    simulate_scan_btn: "📸 मेनू बोर्ड फोटो स्कैन करें",
-    review_publish_btn: "✓ समीक्षा करें और 87 सब्सक्राइबर्स को भेजें",
+    simulate_scan_btn: "मेनू बोर्ड फोटो स्कैन करें",
+    review_publish_btn: "समीक्षा करें और 87 सब्सक्राइबर्स को भेजें",
     ledger_title: "लेन-देन बहीखाता (डबल-एंट्री लेजर)",
     date: "तारीख और समय",
     type: "प्रकार",
@@ -189,7 +189,7 @@ function setupNetworkMonitoring() {
     } else {
       banner.classList.add('offline');
       banner.style.display = 'block';
-      banner.textContent = "⚠️ Offline Mode: Changes are safely stored in queue and will sync automatically.";
+      banner.innerHTML = '<span class="icon" style="font-size: 1.1rem; margin-right: 6px;">cloud_off</span> Offline Mode: Changes are safely stored in queue and will sync automatically.';
     }
   };
   window.addEventListener('online', updateStatus);
@@ -330,11 +330,11 @@ function renderMenuItems() {
       // Authentic tag heuristics
       let tagHtml = `<span class="dish-tag">${item.category}</span>`;
       if (item.category === 'Sabzi') {
-        tagHtml += ` <span class="dish-tag" style="color: #ff6b00;">🔥 Fresh Spices</span>`;
+        tagHtml += ` <span class="dish-tag" style="color: #ff6b00;"><span class="icon" style="font-size:0.9rem; margin-right:3px;">local_fire_department</span> Fresh Spices</span>`;
       } else if (item.category === 'Bread') {
-        tagHtml += ` <span class="dish-tag" style="color: #10b981;">🥞 Unlimited Tawa Hot</span>`;
+        tagHtml += ` <span class="dish-tag" style="color: #10b981;"><span class="icon" style="font-size:0.9rem; margin-right:3px;">all_inclusive</span> Unlimited Tawa Hot</span>`;
       } else if (item.category === 'Dal') {
-        tagHtml += ` <span class="dish-tag" style="color: #f59e0b;">✨ High Protein</span>`;
+        tagHtml += ` <span class="dish-tag" style="color: #f59e0b;"><span class="icon" style="font-size:0.9rem; margin-right:3px;">fitness_center</span> High Protein</span>`;
       }
 
       row.innerHTML = `
@@ -342,7 +342,7 @@ function renderMenuItems() {
           <div class="dish-primary-name">${localizedName}</div>
           <div class="dish-meta-pills">${tagHtml}</div>
         </div>
-        <span class="badge badge-veg">✓ Freshly Prepared</span>
+        <span class="badge badge-veg"><span class="icon" style="font-size:0.85rem; margin-right:3px;">check_circle</span> Freshly Prepared</span>
       `;
       menuContainer.appendChild(row);
     });
@@ -381,9 +381,9 @@ window.handleSkipMeal = async function() {
         // Show success banner
         const alertBox = document.getElementById('skip-success-banner');
         alertBox.style.display = 'block';
-        alertBox.innerHTML = `✅ <strong>${data.message}</strong> Kitchen head-count target updated to reduce overcooking.`;
+        alertBox.innerHTML = `<span class="icon" style="color: var(--veg-green); vertical-align: middle; margin-right: 4px;">check_circle</span> <strong>${data.message}</strong> Kitchen head-count target updated to reduce overcooking.`;
       }
-      btn.textContent = "✓ Dinner Skipped (₹50 Credited)";
+      btn.innerHTML = `<span class="icon" style="font-size: 1rem; margin-right: 4px;">check_circle</span> Dinner Skipped (₹50 Credited)`;
       btn.classList.add('skipped');
       btn.style.background = "#059669";
     }
@@ -442,13 +442,13 @@ window.simulateOCRScan = function() {
   const laser = document.getElementById('ocr-scan-laser');
 
   scanBtn.disabled = true;
-  scanBtn.textContent = "⏳ Analyzing Devanagari Script & Calibrating Confidence...";
+  scanBtn.innerHTML = '<span class="icon" style="font-size: 1rem; margin-right: 4px;">hourglass_top</span> Analyzing Devanagari Script & Calibrating Confidence...';
   if (laser) laser.classList.add('scanning');
 
   setTimeout(() => {
     if (laser) laser.classList.remove('scanning');
     scanBtn.disabled = false;
-    scanBtn.textContent = "📸 Rescan Chalkboard Photo";
+    scanBtn.innerHTML = '<span class="icon" style="font-size: 1rem; margin-right: 4px;">photo_camera</span> Rescan Chalkboard Photo';
     previewBox.style.display = 'block';
 
     app.ocrScannedItems = [
@@ -468,7 +468,7 @@ window.simulateOCRScan = function() {
         <div>
           <div class="dish-primary-name">${item[app.currentLang] || item.en}</div>
           <div style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 2px;">
-            ${item.category} • <span style="color: var(--veg-green); font-weight: 700;">✓ ${(item.confidence * 100).toFixed(0)}% OCR Confidence</span>
+            ${item.category} • <span style="color: var(--veg-green); font-weight: 700;"><span class="icon" style="font-size:0.85rem; margin-right:2px;">check</span> ${(item.confidence * 100).toFixed(0)}% OCR Confidence</span>
           </div>
         </div>
         <button class="btn btn-outline" style="min-height: 34px; padding: 4px 12px; font-size: 0.8rem;" onclick="editOcrItem(${idx})">Edit Text</button>
@@ -514,8 +514,8 @@ window.publishScannedMenu = async function() {
     });
     const data = await res.json();
     if (data.success) {
-      alert("✅ Menu Published! 87 subscribers have been notified with the updated menu.");
-      btn.textContent = "Published ✓";
+      alert("Menu Published! 87 subscribers have been notified with the updated menu.");
+      btn.innerHTML = 'Published <span class="icon" style="font-size: 0.9rem; margin-left: 2px;">check</span>';
       document.getElementById('ocr-result-preview').style.display = 'none';
       loadInitialData();
     }
