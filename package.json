@@ -1,0 +1,14 @@
+{
+  "name": "messlink",
+  "version": "1.0.0",
+  "description": "MessLink - Indian Mess Discovery and Operations Platform",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node src/tests/run_tests.js",
+    "flutter": "cd messlink_app && flutter run -d chrome"
+  },
+  "keywords": ["messlink", "mess", "subscription", "food"],
+  "author": "",
+  "license": "ISC"
+}

@@ -375,8 +375,22 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(PORT, () => {
-  console.log(`[MESSLINK ENGINE] Server running at http://localhost:${PORT}`);
+server.on('listening', () => {
+  const address = server.address();
+  const actualPort = typeof address === 'string' ? address : address.port;
+  console.log(`[MESSLINK ENGINE] Server running at http://localhost:${actualPort}`);
   console.log(`[MESSLINK ENGINE] Regional Timezone: Asia/Kolkata (IST)`);
   console.log(`[MESSLINK ENGINE] Regulatory Mode: DPDPA 2023 & FSSAI Compliant`);
 });
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE' && !process.env.PORT && PORT === 3000) {
+    console.warn(`[MESSLINK ENGINE] Notice: Port 3000 is occupied. Switching automatically to port 3001...`);
+    server.listen(3001);
+  } else {
+    console.error(`[MESSLINK ENGINE] Server error:`, err.message);
+    process.exit(1);
+  }
+});
+
+server.listen(PORT);
